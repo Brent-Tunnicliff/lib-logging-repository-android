@@ -1,4 +1,4 @@
-package dev.tunnicliff.replace_me.demo
+package dev.tunnicliff.logger
 
 import org.junit.Test
 
