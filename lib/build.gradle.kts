@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.tunnicliff.logger"
+    namespace = "dev.tunnicliff.logging.repository"
     compileSdk = 34
 
     defaultConfig {
@@ -43,7 +43,7 @@ publishing {
     publications {
         register<MavenPublication>("release") {
             groupId = "dev.tunnicliff"
-            artifactId = "logger"
+            artifactId = "logging-repository"
             version = "0.0.0"
 
             afterEvaluate {

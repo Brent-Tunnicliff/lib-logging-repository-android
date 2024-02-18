@@ -1,4 +1,4 @@
-package dev.tunnicliff.logger
+package dev.tunnicliff.logging.repository
 
 enum class LogLevel {
     CRITICAL,

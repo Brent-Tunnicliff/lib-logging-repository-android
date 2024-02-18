@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "dev.tunnicliff.logger.demo"
+    namespace = "dev.tunnicliff.logging.repository.demo"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "dev.tunnicliff.logger.demo"
+        applicationId = "dev.tunnicliff.logging.repository.demo"
         minSdk = 33
         targetSdk = 34
         versionCode = 1

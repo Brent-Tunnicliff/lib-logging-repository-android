@@ -1,4 +1,4 @@
-package dev.tunnicliff.logger.demo.ui.theme
+package dev.tunnicliff.logging.repository.demo.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

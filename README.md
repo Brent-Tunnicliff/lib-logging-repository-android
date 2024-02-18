@@ -1,4 +1,4 @@
-# lib-logger-android
+# lib-logging-repository-android
 
 Logging that writes to a local database and manages permissions for uploading logs.
 This library does not upload these logs anywhere, but can provide a delegate for sending logs

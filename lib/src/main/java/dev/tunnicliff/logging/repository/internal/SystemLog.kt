@@ -1,6 +1,7 @@
-package dev.tunnicliff.logger
+package dev.tunnicliff.logging.repository.internal
 
 import android.util.Log
+import dev.tunnicliff.logging.repository.LogLevel
 
 /**
  * Wrapper for the system Log.

@@ -1,4 +1,4 @@
-package dev.tunnicliff.logger
+package dev.tunnicliff.logging.repository.internal
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -6,86 +6,22 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dev.tunnicliff.logging.repository.LogLevel
+import dev.tunnicliff.logging.repository.LogUploadPermission
+import dev.tunnicliff.logging.repository.LoggingRepository
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-//region Interface
-
-/**
- * Manages recording and sending logs to console.
- *
- * Use `Logger.new()` to get the usable instance.
- */
-interface Logger {
-    fun getUploadPermission(): LogUploadPermission
-    suspend fun getUploadPermissionFlow(): Flow<LogUploadPermission>
-    fun setUploadPermission(value: LogUploadPermission)
-
-    fun debug(tag: String, message: String, throwable: Throwable? = null)
-    fun info(tag: String, message: String, throwable: Throwable? = null)
-    fun warning(tag: String, message: String, throwable: Throwable? = null)
-    fun error(tag: String, message: String, throwable: Throwable? = null)
-    fun critical(tag: String, message: String, throwable: Throwable? = null)
-
-    /**
-     * Interface for handling upload of logs to external systems.
-     */
-    interface UploadHandler {
-        suspend fun uploadLog(level: LogLevel, tag: String, message: String, throwable: Throwable?)
-    }
-
-    /**
-     * Builder for creating the Logger.
-     *
-     * There should only be one logger instance for the application.
-     *
-     * @param context application context.
-     */
-    class Builder(private val context: Context) {
-        private var systemLog = SystemLog.INSTANCE
-        private var uploadHandler: UploadHandler? = null
-
-        fun build(): Logger = LoggerImpl(
-            context = context,
-            isDebug = BuildConfig.DEBUG,
-            systemLog = systemLog,
-            uploadHandler = uploadHandler
-        )
-
-        fun uploadHandler(uploadHandler: UploadHandler): Builder = this.apply {
-            this.uploadHandler = uploadHandler
-        }
-    }
-}
-
-//endregion
-
-//region Implementation
-
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "logger")
-
-private data class LogContext(
-    val level: LogLevel,
-    val tag: String,
-    val message: String,
-    val throwable: Throwable?
-)
-
-@OptIn(DelicateCoroutinesApi::class)
-private class LoggerImpl(
+internal class DefaultLoggingRepository(
     private val context: Context,
-    // Using GlobalScope is not ideal, but wanted to avoid having to make each function `suspend`.
-    // Probably not an issue though since ideally Logger's lifecycle should match the app.
-    private val coroutineScope: CoroutineScope = GlobalScope,
+    private val coroutineScope: CoroutineScope,
     private val isDebug: Boolean,
     private val systemLog: SystemLog,
-    private val uploadHandler: Logger.UploadHandler?
-) : Logger {
+    private val uploadHandler: LoggingRepository.UploadHandler?
+) : LoggingRepository {
     private companion object {
         val UPLOAD_PERMISSION_DEFAULT = LogUploadPermission.NOT_SET
         val UPLOAD_PERMISSION_KEY = stringPreferencesKey("UPLOAD_PERMISSION")
@@ -102,7 +38,7 @@ private class LoggerImpl(
         }
     }
 
-    //region Logger
+    //region LoggingRepository
 
     override fun getUploadPermission(): LogUploadPermission =
         currentUploadPermission
@@ -183,4 +119,11 @@ private class LoggerImpl(
     //endregion
 }
 
-//endregion
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "DefaultLoggingRepository")
+
+private data class LogContext(
+    val level: LogLevel,
+    val tag: String,
+    val message: String,
+    val throwable: Throwable?
+)

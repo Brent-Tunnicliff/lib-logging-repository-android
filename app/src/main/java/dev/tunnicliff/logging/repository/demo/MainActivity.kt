@@ -1,4 +1,4 @@
-package dev.tunnicliff.logger.demo
+package dev.tunnicliff.logging.repository.demo
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,8 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import dev.tunnicliff.logger.Example
-import dev.tunnicliff.logger.demo.ui.theme.DemoTheme
+import dev.tunnicliff.logging.repository.demo.ui.theme.DemoTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +32,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Message(modifier: Modifier = Modifier) {
     Text(
-        text = "Value: ${Example.VALUE}",
+        text = "Value: Hello world",
         modifier = modifier
     )
 }
