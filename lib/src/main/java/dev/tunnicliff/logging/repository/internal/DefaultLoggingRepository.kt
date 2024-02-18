@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dev.tunnicliff.logging.repository.LogLevel
@@ -11,9 +12,11 @@ import dev.tunnicliff.logging.repository.LogUploadPermission
 import dev.tunnicliff.logging.repository.LoggingRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 internal class DefaultLoggingRepository(
     private val context: Context,
@@ -23,6 +26,7 @@ internal class DefaultLoggingRepository(
     private val uploadHandler: LoggingRepository.UploadHandler?
 ) : LoggingRepository {
     private companion object {
+        const val TAG = "DefaultLoggingRepository"
         val UPLOAD_PERMISSION_DEFAULT = LogUploadPermission.NOT_SET
         val UPLOAD_PERMISSION_KEY = stringPreferencesKey("UPLOAD_PERMISSION")
     }
@@ -44,16 +48,34 @@ internal class DefaultLoggingRepository(
         currentUploadPermission
 
     override suspend fun getUploadPermissionFlow(): Flow<LogUploadPermission> =
-        context.dataStore.data.map { preferences ->
-            preferences[UPLOAD_PERMISSION_KEY]?.let {
-                LogUploadPermission.valueOf(it)
-            } ?: UPLOAD_PERMISSION_DEFAULT
-        }
+        context.dataStore.data
+            .catch {
+                // dataStore.data throws an IOException when an error is encountered when reading data
+                if (it is IOException) {
+                    error(TAG, "getUploadPermissionFlow: Error writing data", it)
+                    emit(emptyPreferences())
+                } else {
+                    error(TAG, "getUploadPermissionFlow: Unexpected exception", it)
+                    throw it
+                }
+            }
+            .map { preferences ->
+                preferences[UPLOAD_PERMISSION_KEY]?.let {
+                    LogUploadPermission.valueOf(it)
+                } ?: UPLOAD_PERMISSION_DEFAULT
+            }
 
     override fun setUploadPermission(value: LogUploadPermission) {
         coroutineScope.launch {
-            context.dataStore.edit {
-                it[UPLOAD_PERMISSION_KEY] = value.name
+            try {
+                context.dataStore.edit {
+                    it[UPLOAD_PERMISSION_KEY] = value.name
+                }
+            } catch (exception: IOException) {
+                error(TAG, "setUploadPermission: Error reading data", exception)
+            } catch (exception: Throwable) {
+                error(TAG, "setUploadPermission: Unexpected exception", exception)
+                throw exception
             }
         }
     }
