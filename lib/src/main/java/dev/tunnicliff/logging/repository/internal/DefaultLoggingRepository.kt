@@ -10,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import dev.tunnicliff.logging.repository.LogLevel
 import dev.tunnicliff.logging.repository.LogUploadPermission
 import dev.tunnicliff.logging.repository.LoggingRepository
+import dev.tunnicliff.logging.repository.internal.database.LoggingRepositoryDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,6 +22,7 @@ import java.io.IOException
 internal class DefaultLoggingRepository(
     private val context: Context,
     private val coroutineScope: CoroutineScope,
+    private val database: LoggingRepositoryDatabase,
     private val isDebug: Boolean,
     private val systemLog: SystemLog,
     private val uploadHandler: LoggingRepository.UploadHandler?

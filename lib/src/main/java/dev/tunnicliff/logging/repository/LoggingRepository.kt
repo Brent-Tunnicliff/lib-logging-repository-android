@@ -3,6 +3,7 @@ package dev.tunnicliff.logging.repository
 import android.content.Context
 import dev.tunnicliff.logging.repository.internal.DefaultLoggingRepository
 import dev.tunnicliff.logging.repository.internal.SystemLog
+import dev.tunnicliff.logging.repository.internal.database.LoggingRepositoryDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -36,7 +37,7 @@ interface LoggingRepository {
      *
      * Recommended to only be one LoggingRepository instance for the application.
      *
-     * @param context application context.
+     * @param context The context for the logging. This is usually the Application context.
      */
     class Builder(private val context: Context) {
         // Using GlobalScope is not ideal, but wanted to avoid having to make each function `suspend`.
@@ -49,6 +50,7 @@ interface LoggingRepository {
         fun build(): LoggingRepository = DefaultLoggingRepository(
             context = context,
             coroutineScope = coroutineScope,
+            database = LoggingRepositoryDatabase.getDatabase(context),
             isDebug = BuildConfig.DEBUG,
             systemLog = systemLog,
             uploadHandler = uploadHandler
