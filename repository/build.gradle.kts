@@ -1,4 +1,5 @@
 plugins {
+    id("androidx.room")
     id("com.android.library")
     id("com.google.devtools.ksp")
     id("maven-publish")
@@ -54,6 +55,10 @@ publishing {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.room:room-paging:2.6.1")
@@ -62,6 +67,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.code.gson:gson:2.10.1")
 
     // Example of github lib.
     // implementation("com.github.Brent-Tunnicliff:temp_poc:0.0.4")

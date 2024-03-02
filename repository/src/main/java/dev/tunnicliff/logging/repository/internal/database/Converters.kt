@@ -1,6 +1,7 @@
 package dev.tunnicliff.logging.repository.internal.database
 
 import androidx.room.TypeConverter
+import com.google.gson.Gson
 import dev.tunnicliff.logging.repository.LogLevel
 import java.time.Instant
 
@@ -19,5 +20,13 @@ internal class Converters {
 
     @TypeConverter
     fun toLogLevel(value: String): LogLevel = LogLevel.valueOf(value)
+    //endregion
+
+    //region Throwable
+    @TypeConverter
+    fun fromThrowable(value: Throwable): String = Gson().toJson(value)
+
+    @TypeConverter
+    fun toThrowable(value: String): Throwable = Gson().fromJson(value, Throwable::class.java)
     //endregion
 }
