@@ -1,4 +1,4 @@
-package dev.tunnicliff.logging.repository.demo.ui.theme
+package dev.tunnicliff.logging.demo.ui.theme
 
 import android.app.Activity
 import android.os.Build
