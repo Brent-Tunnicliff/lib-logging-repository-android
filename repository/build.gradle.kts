@@ -28,12 +28,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -46,7 +46,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "dev.tunnicliff"
             artifactId = "logging-repository"
-            version = "0.0.0"
+            version = "0.1.0"
 
             afterEvaluate {
                 from(components["release"])
