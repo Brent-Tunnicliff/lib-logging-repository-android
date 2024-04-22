@@ -55,7 +55,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":repository"))
+    implementation(project(":lib"))
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation(platform("androidx.compose:compose-bom:2024.04.01"))

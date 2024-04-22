@@ -1,11 +1,13 @@
 plugins {
+    id("androidx.room")
     id("com.android.library")
+    id("com.google.devtools.ksp")
     id("maven-publish")
     id("org.jetbrains.kotlin.android")
 }
 
 android {
-    namespace = "dev.tunnicliff.logging.view"
+    namespace = "dev.tunnicliff.logging"
     compileSdk = 34
 
     defaultConfig {
@@ -36,11 +38,6 @@ android {
 
     buildFeatures {
         buildConfig = true
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
     }
 }
 
@@ -48,7 +45,7 @@ publishing {
     publications {
         register<MavenPublication>("release") {
             groupId = "dev.tunnicliff"
-            artifactId = "logging.view"
+            artifactId = "logging"
             version = "0.1.0"
 
             afterEvaluate {
@@ -56,6 +53,10 @@ publishing {
             }
         }
     }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {
@@ -66,12 +67,25 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.datastore:datastore-preferences:1.1.0")
+    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-paging:2.6.1")
+    implementation("androidx.room:room-runtime:2.6.1")
     implementation("com.github.Brent-Tunnicliff:lib-ui-android:0.1.0-alpha.2")
     implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Example of github lib.
+    // implementation("com.github.Brent-Tunnicliff:temp_poc:0.0.4")
+
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+
+    ksp("androidx.room:room-compiler:2.6.1")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    testImplementation("androidx.room:room-testing:2.6.1")
     testImplementation("junit:junit:4.13.2")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

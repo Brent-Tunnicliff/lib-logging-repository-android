@@ -22,5 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Demo"
 include(":app")
-include(":repository")
-include(":view")
+include(":lib")

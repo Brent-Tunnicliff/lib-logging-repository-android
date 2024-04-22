@@ -13,8 +13,8 @@ internal interface LogDao {
     fun getAll(): List<LogEntity>
 
     @Insert
-    fun insert(logEntity: LogEntity): Long
+    suspend fun insert(logEntity: LogEntity): Long
 
     @Update
-    fun update(vararg logEntity: LogEntity): Int
+    suspend fun update(vararg logEntity: LogEntity): Int
 }

@@ -10,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import dev.tunnicliff.logging.repository.LogLevel
 import dev.tunnicliff.logging.repository.LogUploadPermission
 import dev.tunnicliff.logging.repository.LoggingRepository
+import dev.tunnicliff.logging.repository.internal.database.LogEntity
 import dev.tunnicliff.logging.repository.internal.database.LoggingRepositoryDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.time.Instant
 
 internal class DefaultLoggingRepository(
     private val context: Context,
@@ -125,7 +127,21 @@ internal class DefaultLoggingRepository(
     }
 
     private fun writeLog(context: LogContext) {
-        TODO("Implement database")
+        val now = Instant.now()
+        coroutineScope.launch {
+            database.logDao().insert(
+                LogEntity(
+                    id = 0,
+                    level = context.level,
+                    message = context.message,
+                    tag = context.tag,
+                    throwable = context.throwable,
+                    timestampCreated = now,
+                    timestampUpdated = now,
+                    uploaded = false
+                )
+            )
+        }
     }
 
     private fun uploadLog(context: LogContext) {
@@ -134,9 +150,12 @@ internal class DefaultLoggingRepository(
         }
 
         coroutineScope.launch {
-            with(context) {
-                uploadHandler.uploadLog(level, tag, message, throwable)
-            }
+            uploadHandler.uploadLog(
+                context.level,
+                context.tag,
+                context.message,
+                context.throwable
+            )
         }
     }
 
