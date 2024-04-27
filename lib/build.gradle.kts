@@ -71,6 +71,7 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.room:room-paging:2.6.1")
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation("com.github.Brent-Tunnicliff:lib-container-android:1.0.0-beta.1")
     implementation("com.github.Brent-Tunnicliff:lib-ui-android:0.1.0-alpha.2")
     implementation("com.google.android.material:material:1.11.0")
     implementation("com.google.code.gson:gson:2.10.1")

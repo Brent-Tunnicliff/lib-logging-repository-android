@@ -1,8 +1,8 @@
-package dev.tunnicliff.logging.repository.internal.database
+package dev.tunnicliff.logging.internal.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import dev.tunnicliff.logging.repository.LogLevel
+import dev.tunnicliff.logging.model.LogLevel
 import java.time.Instant
 
 @Entity

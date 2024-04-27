@@ -1,5 +1,8 @@
-package dev.tunnicliff.logging.repository
+package dev.tunnicliff.logging.model
 
+/**
+ * Represents if the user has allowed uploading logs to an external service.
+ */
 enum class LogUploadPermission {
     ALLOWED,
     NOT_SET,

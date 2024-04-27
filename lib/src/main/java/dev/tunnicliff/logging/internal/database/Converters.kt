@@ -1,8 +1,8 @@
-package dev.tunnicliff.logging.repository.internal.database
+package dev.tunnicliff.logging.internal.database
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import dev.tunnicliff.logging.repository.LogLevel
+import dev.tunnicliff.logging.model.LogLevel
 import java.time.Instant
 
 internal class Converters {

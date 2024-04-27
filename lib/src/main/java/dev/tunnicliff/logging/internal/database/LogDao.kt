@@ -1,16 +1,14 @@
-package dev.tunnicliff.logging.repository.internal.database
+package dev.tunnicliff.logging.internal.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 
 @Dao
 internal interface LogDao {
-    @Transaction
-    @Query("SELECT * FROM LogEntity")
-    fun getAll(): List<LogEntity>
+    @Query("SELECT * FROM LogEntity where id=:id")
+    fun getLog(id: Long): LogEntity
 
     @Insert
     suspend fun insert(logEntity: LogEntity): Long
