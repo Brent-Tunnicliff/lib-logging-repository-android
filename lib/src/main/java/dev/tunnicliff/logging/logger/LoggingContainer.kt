@@ -2,14 +2,14 @@ package dev.tunnicliff.logging.logger
 
 import android.content.Context
 import dev.tunnicliff.container.Container
-import dev.tunnicliff.logging.internal.DefaultLogUploader
-import dev.tunnicliff.logging.internal.DefaultLogWriter
-import dev.tunnicliff.logging.internal.DefaultLogger
-import dev.tunnicliff.logging.internal.DefaultLoggingConfigurationManager
-import dev.tunnicliff.logging.internal.LogUploader
-import dev.tunnicliff.logging.internal.LogWriter
-import dev.tunnicliff.logging.internal.SystemLog
-import dev.tunnicliff.logging.internal.SystemLogWrapper
+import dev.tunnicliff.logging.logger.internal.DefaultLogUploader
+import dev.tunnicliff.logging.logger.internal.DefaultLogWriter
+import dev.tunnicliff.logging.logger.internal.DefaultLogger
+import dev.tunnicliff.logging.logger.internal.DefaultLoggingConfigurationManager
+import dev.tunnicliff.logging.logger.internal.LogUploader
+import dev.tunnicliff.logging.logger.internal.LogWriter
+import dev.tunnicliff.logging.logger.internal.SystemLog
+import dev.tunnicliff.logging.logger.internal.SystemLogWrapper
 import dev.tunnicliff.logging.internal.database.LoggingRepositoryDatabase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

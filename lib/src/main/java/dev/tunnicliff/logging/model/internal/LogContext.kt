@@ -1,4 +1,4 @@
-package dev.tunnicliff.logging.internal
+package dev.tunnicliff.logging.model.internal
 
 import com.google.gson.Gson
 import dev.tunnicliff.logging.model.LogLevel

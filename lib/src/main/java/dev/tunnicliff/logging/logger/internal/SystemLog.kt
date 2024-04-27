@@ -1,6 +1,7 @@
-package dev.tunnicliff.logging.internal
+package dev.tunnicliff.logging.logger.internal
 
 import android.util.Log
+import dev.tunnicliff.logging.model.internal.LogContext
 import dev.tunnicliff.logging.model.LogLevel
 
 /**

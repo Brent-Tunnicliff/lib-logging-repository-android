@@ -1,4 +1,4 @@
-package dev.tunnicliff.logging.internal
+package dev.tunnicliff.logging.logger.internal
 
 import android.content.Context
 import androidx.datastore.core.DataStore

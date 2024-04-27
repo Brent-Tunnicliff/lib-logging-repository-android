@@ -1,5 +1,6 @@
-package dev.tunnicliff.logging.internal
+package dev.tunnicliff.logging.logger.internal
 
+import dev.tunnicliff.logging.model.internal.LogContext
 import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.logging.logger.Logger
 import dev.tunnicliff.logging.logger.LoggingConfigurationManager
