@@ -4,11 +4,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import dev.tunnicliff.logging.model.LogLevel
 import java.time.Instant
+import java.util.UUID
 
 @Entity
 internal data class LogEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    // UUID for primary key is probably overly complicated for this use case,
+    // but I wanted to do it for the learning experience.
+    @PrimaryKey
+    val id: UUID,
     val level: LogLevel,
     val message: String,
     val tag: String,

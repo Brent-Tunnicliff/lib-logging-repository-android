@@ -1,10 +1,10 @@
 package dev.tunnicliff.logging.logger.internal
 
-import dev.tunnicliff.logging.model.internal.LogContext
-import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.logging.logger.Logger
 import dev.tunnicliff.logging.logger.LoggingConfigurationManager
+import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.logging.model.allowedLogLevels
+import dev.tunnicliff.logging.model.internal.LogContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -16,6 +16,14 @@ internal class DefaultLogger(
     private val logWriter: LogWriter,
     private val systemLog: SystemLog
 ) : Logger {
+    private companion object {
+        const val TAG = "DefaultLogger"
+    }
+
+    init {
+        info(tag = TAG, message = "Logger initialised")
+    }
+
     //region Logger
 
     override fun debug(tag: String, message: String, throwable: Throwable?) {

@@ -1,9 +1,9 @@
 package dev.tunnicliff.logging.logger.internal
 
-import dev.tunnicliff.logging.model.internal.LogContext
-import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.logging.logger.LogUploadHandler
 import dev.tunnicliff.logging.logger.LoggingConfigurationManager
+import dev.tunnicliff.logging.model.LogLevel
+import dev.tunnicliff.logging.model.internal.LogContext
 import kotlinx.coroutines.flow.first
 
 internal interface LogUploader {
@@ -29,7 +29,7 @@ internal class DefaultLogUploader(
             return false
         }
 
-        try {
+        return try {
             with(logContext) {
                 uploadHandler.uploadLog(
                     level = level,
@@ -38,8 +38,6 @@ internal class DefaultLogUploader(
                     throwable = throwable
                 )
             }
-
-            return true
         } catch (exception: Exception) {
             logUploadException(
                 cause = logContext,

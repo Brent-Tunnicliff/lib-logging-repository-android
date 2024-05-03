@@ -1,7 +1,11 @@
-package dev.tunnicliff.logging.logger
+package dev.tunnicliff.logging
 
 import android.content.Context
 import dev.tunnicliff.container.Container
+import dev.tunnicliff.logging.internal.database.LoggingDatabase
+import dev.tunnicliff.logging.logger.LogUploadHandler
+import dev.tunnicliff.logging.logger.Logger
+import dev.tunnicliff.logging.logger.LoggingConfigurationManager
 import dev.tunnicliff.logging.logger.internal.DefaultLogUploader
 import dev.tunnicliff.logging.logger.internal.DefaultLogWriter
 import dev.tunnicliff.logging.logger.internal.DefaultLogger
@@ -10,7 +14,7 @@ import dev.tunnicliff.logging.logger.internal.LogUploader
 import dev.tunnicliff.logging.logger.internal.LogWriter
 import dev.tunnicliff.logging.logger.internal.SystemLog
 import dev.tunnicliff.logging.logger.internal.SystemLogWrapper
-import dev.tunnicliff.logging.internal.database.LoggingRepositoryDatabase
+import dev.tunnicliff.logging.view.internal.LogsViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 
@@ -24,6 +28,8 @@ class LoggingContainer(
         fun applicationContext(): Context
         fun uploadHandler(): LogUploadHandler?
     }
+
+    // region Public
 
     @OptIn(DelicateCoroutinesApi::class)
     fun logger(): Logger = resolveSingleton {
@@ -45,8 +51,19 @@ class LoggingContainer(
         )
     }
 
-    private fun loggingRepositoryDatabase(): LoggingRepositoryDatabase = resolveSingleton {
-        LoggingRepositoryDatabase.new(dependencies.applicationContext())
+    // endregion
+
+    // region Internal
+
+    internal fun logsViewModel(): LogsViewModel =
+        LogsViewModel(loggingDatabase = loggingRepositoryDatabase())
+
+    // endregion
+
+    // region Private
+
+    private fun loggingRepositoryDatabase(): LoggingDatabase = resolveSingleton {
+        LoggingDatabase.new(dependencies.applicationContext())
     }
 
     private fun logUploader(): LogUploader = resolveWeak {
@@ -69,4 +86,6 @@ class LoggingContainer(
     private fun systemLog(): SystemLog = resolveWeak {
         SystemLogWrapper()
     }
+
+    // endregion
 }

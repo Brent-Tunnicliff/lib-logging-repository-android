@@ -11,12 +11,12 @@ import androidx.room.TypeConverters
     version = 1
 )
 @TypeConverters(Converters::class)
-internal abstract class LoggingRepositoryDatabase : RoomDatabase() {
+internal abstract class LoggingDatabase : RoomDatabase() {
     companion object {
-        fun new(context: Context): LoggingRepositoryDatabase =
+        fun new(context: Context): LoggingDatabase =
             Room.databaseBuilder(
                 context,
-                LoggingRepositoryDatabase::class.java,
+                LoggingDatabase::class.java,
                 "logging-repository-database"
             ).build()
     }

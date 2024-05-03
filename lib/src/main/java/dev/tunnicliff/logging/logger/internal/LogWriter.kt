@@ -1,10 +1,11 @@
 package dev.tunnicliff.logging.logger.internal
 
-import dev.tunnicliff.logging.model.internal.LogContext
 import dev.tunnicliff.logging.internal.database.LogEntity
-import dev.tunnicliff.logging.internal.database.LoggingRepositoryDatabase
+import dev.tunnicliff.logging.internal.database.LoggingDatabase
 import dev.tunnicliff.logging.model.LogLevel
+import dev.tunnicliff.logging.model.internal.LogContext
 import java.time.Instant
+import java.util.UUID
 
 internal interface LogWriter {
     /**
@@ -12,13 +13,13 @@ internal interface LogWriter {
      *
      * @return the database id of the log.
      */
-    suspend fun writeLog(context: LogContext): Long
+    suspend fun writeLog(context: LogContext): UUID
 
-    suspend fun setLogAsUploaded(id: Long, uploaded: Boolean)
+    suspend fun setLogAsUploaded(id: UUID, uploaded: Boolean)
 }
 
 internal class DefaultLogWriter(
-    private val database: LoggingRepositoryDatabase,
+    private val database: LoggingDatabase,
     // Making `logUploader` a lambda to avoid cycle dependency.
     private val logUploader: () -> LogUploader,
     private val systemLog: SystemLog,
@@ -29,13 +30,13 @@ internal class DefaultLogWriter(
 
     // region LogWriter
 
-    override suspend fun writeLog(context: LogContext): Long {
+    override suspend fun writeLog(context: LogContext): UUID {
         try {
             val now = Instant.now()
-            return database.logDao().insert(
+            val id = UUID.randomUUID()
+            database.logDao().insert(
                 LogEntity(
-                    // Setting id as `0` makes it auto generate a new id.
-                    id = 0,
+                    id = id,
                     level = context.level,
                     message = context.message,
                     tag = context.tag,
@@ -45,6 +46,8 @@ internal class DefaultLogWriter(
                     uploaded = false
                 )
             )
+
+            return id
         } catch (exception: Exception) {
             logUploadException(
                 cause = "writeLog, $context",
@@ -54,7 +57,7 @@ internal class DefaultLogWriter(
         }
     }
 
-    override suspend fun setLogAsUploaded(id: Long, uploaded: Boolean) {
+    override suspend fun setLogAsUploaded(id: UUID, uploaded: Boolean) {
         try {
             val now = Instant.now()
             val entity = database.logDao().getLog(id)

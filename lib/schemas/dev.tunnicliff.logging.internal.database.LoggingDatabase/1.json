@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f959ce4acf95c981a6863ad5101c7504",
+    "identityHash": "cda8bb5f8e36b720c68272a29e4198d0",
     "entities": [
       {
         "tableName": "LogEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `level` TEXT NOT NULL, `message` TEXT NOT NULL, `tag` TEXT NOT NULL, `timestampCreated` INTEGER NOT NULL, `timestampUpdated` INTEGER NOT NULL, `throwable` TEXT, `uploaded` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `level` TEXT NOT NULL, `message` TEXT NOT NULL, `tag` TEXT NOT NULL, `timestampCreated` INTEGER NOT NULL, `timestampUpdated` INTEGER NOT NULL, `throwable` TEXT, `uploaded` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -58,7 +58,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "id"
           ]
@@ -70,7 +70,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f959ce4acf95c981a6863ad5101c7504')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cda8bb5f8e36b720c68272a29e4198d0')"
     ]
   }
 }

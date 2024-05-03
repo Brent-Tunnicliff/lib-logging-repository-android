@@ -7,10 +7,10 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import dev.tunnicliff.logging.model.LogLevel
-import dev.tunnicliff.logging.model.LogUploadPermission
 import dev.tunnicliff.logging.logger.Logger
 import dev.tunnicliff.logging.logger.LoggingConfigurationManager
+import dev.tunnicliff.logging.model.LogLevel
+import dev.tunnicliff.logging.model.LogUploadPermission
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -37,11 +37,15 @@ internal class DefaultLoggingConfigurationManager(
             LogUploadPermission.valueOf(it)
         }
 
-    override suspend fun setMinimumLogLevel(value: LogLevel) =
+    override suspend fun setMinimumLogLevel(value: LogLevel) {
+        logger().info(tag = TAG, message = "Updating minimum log level to ${value.name}")
         setPreference(Preference.MinimumLogLevel, value.name)
+    }
 
-    override suspend fun setUploadPermission(value: LogUploadPermission) =
+    override suspend fun setUploadPermission(value: LogUploadPermission) {
+        logger().info(tag = TAG, message = "Updating upload permission to ${value.name}")
         setPreference(Preference.UploadPermission, value.name)
+    }
 
     // endregion
 

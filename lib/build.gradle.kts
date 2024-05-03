@@ -38,6 +38,11 @@ android {
 
     buildFeatures {
         buildConfig = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
 }
 
@@ -60,17 +65,20 @@ room {
 }
 
 dependencies {
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation(platform("androidx.compose:compose-bom:2024.04.01"))
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.core:core-ktx:1.13.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.datastore:datastore-preferences:1.1.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.room:room-paging:2.6.1")
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.paging:paging-compose:3.2.1")
     implementation("com.github.Brent-Tunnicliff:lib-container-android:1.0.0-beta.1")
     implementation("com.github.Brent-Tunnicliff:lib-ui-android:0.1.0-alpha.2")
     implementation("com.google.android.material:material:1.11.0")
