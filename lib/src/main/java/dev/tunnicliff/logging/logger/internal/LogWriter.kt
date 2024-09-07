@@ -1,3 +1,5 @@
+// Copyright © 2024 Brent Tunnicliff <brent@tunnicliff.dev>
+
 package dev.tunnicliff.logging.logger.internal
 
 import dev.tunnicliff.logging.internal.database.LogEntity

@@ -1,3 +1,5 @@
+// Copyright © 2024 Brent Tunnicliff <brent@tunnicliff.dev>
+
 package dev.tunnicliff.logging.repository
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
