@@ -1,0 +1,68 @@
+[versions]
+activityCompose = "1.9.2"
+androidGradlePlugin = "8.5.2"
+appcompat = "1.7.0"
+composeBom = "2024.09.02"
+coreKtx = "1.13.1"
+datastorePreferences = "1.1.1"
+espressoCore = "3.6.1"
+gson = "2.11.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+kotlinAndroid = "1.9.22"
+ksp = "1.9.22-1.0.17"
+libContainerAndroid = "1.0.0-beta.1"
+libUiAndroid = "0.1.0-alpha.4"
+lifecycleRuntimeCompose = "2.8.6"
+lifecycleRuntimeKtx = "2.8.5"
+material = "1.12.0"
+navigationCompose = "2.8.1"
+navigationRuntimeKtx = "2.8.1"
+pagingCompose = "3.3.2"
+roomCompiler = "2.6.1"
+roomKtx = "2.6.1"
+roomPaging = "2.6.1"
+roomPlugin = "2.6.1"
+roomRuntime = "2.6.1"
+roomTesting = "2.6.1"
+uiTestManifest = "1.7.2"
+
+[libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeCompose" }
+androidx-material3 = { module = "androidx.compose.material3:material3" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-navigation-runtime-ktx = { module = "androidx.navigation:navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "roomPaging" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestManifest" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+junit = { module = "junit:junit", version.ref = "junit" }
+lib-container-android = { module = "com.github.Brent-Tunnicliff:lib-container-android", version.ref = "libContainerAndroid" }
+lib-ui-android = { module = "com.github.Brent-Tunnicliff:lib-ui-android", version.ref = "libUiAndroid" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+androidLibrary = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinAndroid" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "roomPlugin" }
