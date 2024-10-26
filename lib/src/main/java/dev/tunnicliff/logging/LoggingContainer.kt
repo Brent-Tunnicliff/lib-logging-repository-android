@@ -16,6 +16,7 @@ import dev.tunnicliff.logging.logger.internal.LogUploader
 import dev.tunnicliff.logging.logger.internal.LogWriter
 import dev.tunnicliff.logging.logger.internal.SystemLog
 import dev.tunnicliff.logging.logger.internal.SystemLogWrapper
+import dev.tunnicliff.logging.view.internal.DefaultLogsViewModel
 import dev.tunnicliff.logging.view.internal.LogsViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -23,12 +24,37 @@ import kotlinx.coroutines.GlobalScope
 /**
  * Dependency injection container for the library.
  */
-class LoggingContainer(
+class LoggingContainer private constructor(
     private val dependencies: Dependencies
 ) : Container() {
     interface Dependencies {
         fun applicationContext(): Context
         fun uploadHandler(): LogUploadHandler?
+    }
+
+    companion object {
+        private lateinit var _SHARED: LoggingContainer
+
+        /**
+         * Shared instance of the container.
+         *
+         * `initialise()` must be called before this can be referenced otherwise
+         *
+         * @throws UninitializedPropertyAccessException if `initialise()` has not been called first.
+         */
+        val SHARED: LoggingContainer
+            get() = _SHARED
+
+        /**
+         * Initialises the container.
+         *
+         * After which `SHARED` will be safe to use.
+         *
+         * @property dependencies the external dependencies required by the container.
+         */
+        fun initialise(dependencies: Dependencies) {
+            _SHARED = LoggingContainer(dependencies)
+        }
     }
 
     // region Public
@@ -58,7 +84,7 @@ class LoggingContainer(
     // region Internal
 
     internal fun logsViewModel(): LogsViewModel =
-        LogsViewModel(loggingDatabase = loggingRepositoryDatabase())
+        DefaultLogsViewModel(loggingDatabase = loggingRepositoryDatabase())
 
     // endregion
 

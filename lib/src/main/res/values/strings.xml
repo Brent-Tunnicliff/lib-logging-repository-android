@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright © 2024 Brent Tunnicliff <brent@tunnicliff.dev> -->
+
+<resources>
+    <string name="log_card_error">Error: %1$s</string>
+    <string name="log_card_not_uploaded">Not uploaded</string>
+    <string name="log_card_uploaded">Uploaded</string>
+    <string name="log_level_critical">Critical</string>
+    <string name="log_level_debug">Debug</string>
+    <string name="log_level_error">Error</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_warning">Warning</string>
+</resources>

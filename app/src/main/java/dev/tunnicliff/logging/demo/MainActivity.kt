@@ -11,11 +11,9 @@ import dev.tunnicliff.ui.theme.AppTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val loggingContainer = (application as MainApplication).container.loggingContainer
-
         setContent {
             AppTheme {
-                MainView(loggingContainer)
+                MainView()
             }
         }
     }

@@ -2,6 +2,10 @@
 
 package dev.tunnicliff.logging.model
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import dev.tunnicliff.logging.R
+
 /**
  * Specifies the log level.
  */
@@ -24,3 +28,13 @@ val LogLevel.allowedLogLevels: List<LogLevel>
         LogLevel.ERROR -> listOf(LogLevel.ERROR, LogLevel.CRITICAL)
         LogLevel.CRITICAL -> listOf(LogLevel.CRITICAL)
     }
+
+@Composable
+fun LogLevel.localisedString(): String =
+    when (this) {
+        LogLevel.CRITICAL -> R.string.log_level_critical
+        LogLevel.DEBUG -> R.string.log_level_debug
+        LogLevel.ERROR -> R.string.log_level_error
+        LogLevel.INFO -> R.string.log_level_info
+        LogLevel.WARNING -> R.string.log_level_warning
+    }.let { stringResource(it) }

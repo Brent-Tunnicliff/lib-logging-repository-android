@@ -21,4 +21,30 @@ internal data class LogEntity(
     var timestampUpdated: Instant,
     val throwable: Throwable?,
     var uploaded: Boolean
-)
+) {
+    internal companion object {
+        /**
+         * Provides a dummy instance for use in previews and tests.
+         */
+        fun mock(
+            id: UUID = UUID.randomUUID(),
+            level: LogLevel = LogLevel.DEBUG,
+            message: String = "Hello World!",
+            tag: String = "LogEntity",
+            timestampCreated: Instant = Instant.now(),
+            timestampUpdated: Instant = Instant.now(),
+            throwable: Throwable? = null,
+            uploaded: Boolean = false
+        ): LogEntity =
+            LogEntity(
+                id = id,
+                level = level,
+                message = message,
+                tag = tag,
+                timestampCreated = timestampCreated,
+                timestampUpdated = timestampUpdated,
+                throwable = throwable,
+                uploaded = uploaded
+            )
+    }
+}

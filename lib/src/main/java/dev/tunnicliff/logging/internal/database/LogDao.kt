@@ -12,18 +12,30 @@ import java.util.UUID
 
 @Dao
 internal interface LogDao {
-    @Insert
-    suspend fun insert(logEntity: LogEntity)
 
-    @Query("SELECT * FROM LogEntity WHERE (timestampCreated, id) < (:lastTimestampCreated, :lastID) ORDER BY timestampCreated DESC, id LIMIT :limit")
-    fun getLogsOrderedByNewestFirst(
-        lastTimestampCreated: Instant,
-        lastID: UUID,
-        limit: Int
-    ): List<LogEntity>
+
+    @Query("SELECT * FROM LogEntity ORDER BY timestampCreated DESC, id LIMIT :limit")
+    suspend fun getFirstLogs(limit: Int): List<LogEntity>
 
     @Query("SELECT * FROM LogEntity WHERE id=:id")
-    fun getLog(id: UUID): LogEntity
+    suspend fun getLog(id: UUID): LogEntity
+
+    @Query("SELECT * FROM LogEntity WHERE (timestampCreated, id) < (:timestampCreated, :id) ORDER BY timestampCreated DESC, id LIMIT :limit")
+    suspend fun getNextLogs(
+        id: UUID,
+        limit: Int,
+        timestampCreated: Instant
+    ): List<LogEntity>
+
+    @Query("SELECT * FROM LogEntity WHERE (timestampCreated, id) > (:timestampCreated, :id) ORDER BY timestampCreated DESC, id LIMIT :limit")
+    suspend fun getPreviousLogs(
+        id: UUID,
+        limit: Int,
+        timestampCreated: Instant
+    ): List<LogEntity>
+
+    @Insert
+    suspend fun insert(logEntity: LogEntity)
 
     @Query("SELECT count(*) FROM LogEntity")
     fun observeCount(): LiveData<Int>

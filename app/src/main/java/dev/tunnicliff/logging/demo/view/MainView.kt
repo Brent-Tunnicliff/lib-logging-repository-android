@@ -3,31 +3,22 @@
 package dev.tunnicliff.logging.demo.view
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.tunnicliff.logging.LoggingContainer
-import dev.tunnicliff.logging.demo.PreviewContainer
+import dev.tunnicliff.logging.demo.container.ViewModelFactory
 import dev.tunnicliff.logging.demo.view.helper.DemoOptionsView
-import dev.tunnicliff.ui.theme.ThemedPreviewer
+import dev.tunnicliff.logging.view.LogsView
 
 @Composable
 fun MainView(
-    loggingContainer: LoggingContainer,
-    viewModel: MainViewModel = viewModel()
+    viewModel: MainViewModel = viewModel(factory = ViewModelFactory)
 ) {
     Column {
         DemoOptionsView()
 
-//        LogsView(loggingContainer)
-    }
-}
+        Text(text = "Preview:")
 
-@Preview
-@Composable
-private fun Preview() {
-    ThemedPreviewer {
-        MainView(PreviewContainer.loggingContainer(LocalContext.current))
+        LogsView()
     }
 }

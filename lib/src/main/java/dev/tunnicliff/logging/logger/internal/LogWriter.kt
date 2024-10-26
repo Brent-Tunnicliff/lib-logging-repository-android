@@ -51,7 +51,7 @@ internal class DefaultLogWriter(
 
             return id
         } catch (exception: Exception) {
-            logUploadException(
+            logException(
                 cause = "writeLog, $context",
                 exception = exception
             )
@@ -67,7 +67,7 @@ internal class DefaultLogWriter(
             entity.timestampUpdated = now
             database.logDao().update(entity)
         } catch (exception: Exception) {
-            logUploadException(
+            logException(
                 cause = "setLogAsUploaded, $id, $uploaded",
                 exception = exception
             )
@@ -80,7 +80,7 @@ internal class DefaultLogWriter(
     // region Private functions
 
     // If uploading throws exception then log in the other methods.
-    private suspend fun logUploadException(cause: String, exception: Exception) {
+    private suspend fun logException(cause: String, exception: Exception) {
         val logContext = LogContext(
             level = LogLevel.CRITICAL,
             tag = TAG,

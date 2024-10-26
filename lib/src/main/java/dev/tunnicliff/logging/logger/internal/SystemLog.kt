@@ -3,8 +3,8 @@
 package dev.tunnicliff.logging.logger.internal
 
 import android.util.Log
-import dev.tunnicliff.logging.model.internal.LogContext
 import dev.tunnicliff.logging.model.LogLevel
+import dev.tunnicliff.logging.model.internal.LogContext
 
 /**
  * Wrapper for the system Log.

@@ -9,10 +9,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class MainViewModel : ViewModel() {
+abstract class MainViewModel : ViewModel()
+
+class DefaultMainViewModel : MainViewModel() {
     private companion object {
         val CHAR_POOL: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         const val TAG = "MainViewModel"
+    }
+
+    init {
+        createLogEverySecond()
     }
 
     private fun createLogEverySecond() {
