@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.9.2"
-androidGradlePlugin = "8.5.2"
+androidGradlePlugin = "8.7.2"
 appcompat = "1.7.0"
 composeBom = "2024.09.03"
 coreKtx = "1.13.1"
