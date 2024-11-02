@@ -3,7 +3,6 @@
 package dev.tunnicliff.logging.demo.container
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import dev.tunnicliff.container.Container
 import dev.tunnicliff.logging.LoggingContainer
 import dev.tunnicliff.logging.logger.LogUploadHandler
@@ -11,7 +10,7 @@ import dev.tunnicliff.logging.model.LogLevel
 
 class AppContainer private constructor(
     private val applicationContext: Context
-) : Container(), LoggingContainer.Dependencies, ViewModelProvider.Factory {
+) : Container() {
     companion object {
         private lateinit var _SHARED: AppContainer
 
@@ -25,15 +24,18 @@ class AppContainer private constructor(
          */
         fun initialise(applicationContext: Context) {
             _SHARED = AppContainer(applicationContext)
-            LoggingContainer.initialise(_SHARED)
+            LoggingContainer.initialise(
+                object : LoggingContainer.Dependencies {
+                    override fun applicationContext(): Context = applicationContext
+                    override fun uploadHandler(): LogUploadHandler = _SHARED.uploadHandler()
+                }
+            )
         }
     }
 
-    // region LoggingContainer.Dependencies
+    // region Private
 
-    override fun applicationContext(): Context = applicationContext
-
-    override fun uploadHandler(): LogUploadHandler = resolveSingleton {
+    private fun uploadHandler(): LogUploadHandler = resolveSingleton {
         object : LogUploadHandler {
             override suspend fun uploadLog(
                 level: LogLevel,

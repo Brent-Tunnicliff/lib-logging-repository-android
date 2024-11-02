@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "dev.tunnicliff.logging.demo"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "dev.tunnicliff.logging.demo"
         minSdk = 33
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
