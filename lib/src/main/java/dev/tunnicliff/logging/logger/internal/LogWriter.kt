@@ -6,6 +6,7 @@ import dev.tunnicliff.logging.internal.database.LogEntity
 import dev.tunnicliff.logging.internal.database.LoggingDatabase
 import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.logging.model.internal.LogContext
+import java.io.IOException
 import java.time.Instant
 import java.util.UUID
 
@@ -50,7 +51,7 @@ internal class DefaultLogWriter(
             )
 
             return id
-        } catch (exception: Exception) {
+        } catch (exception: IOException) {
             logException(
                 cause = "writeLog, $context",
                 exception = exception
@@ -66,7 +67,7 @@ internal class DefaultLogWriter(
             entity.uploaded = uploaded
             entity.timestampUpdated = now
             database.logDao().update(entity)
-        } catch (exception: Exception) {
+        } catch (exception: IOException) {
             logException(
                 cause = "setLogAsUploaded, $id, $uploaded",
                 exception = exception

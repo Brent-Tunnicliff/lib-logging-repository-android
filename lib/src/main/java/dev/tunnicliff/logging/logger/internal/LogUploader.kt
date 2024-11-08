@@ -7,6 +7,7 @@ import dev.tunnicliff.logging.logger.LoggingConfigurationManager
 import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.logging.model.internal.LogContext
 import kotlinx.coroutines.flow.first
+import java.io.IOException
 
 internal interface LogUploader {
     suspend fun upload(logContext: LogContext): Boolean
@@ -40,7 +41,7 @@ internal class DefaultLogUploader(
                     throwable = throwable
                 )
             }
-        } catch (exception: Exception) {
+        } catch (exception: IOException) {
             logUploadException(
                 cause = logContext,
                 exception = exception

@@ -9,6 +9,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import dev.tunnicliff.logging.internal.ViewModelFactory
 import dev.tunnicliff.logging.internal.database.LogEntity
 import dev.tunnicliff.logging.view.internal.LogCardView
 import dev.tunnicliff.logging.view.internal.LogsViewModel
@@ -21,7 +22,7 @@ import dev.tunnicliff.ui.theme.ThemedPreviewer
  * Full screen view for logs.
  */
 @Composable
-fun LogsView() = LogsView(viewModel(factory = LogsViewModel.Factory))
+fun LogsView() = LogsView(viewModel(factory = ViewModelFactory))
 
 @Composable
 private fun LogsView(viewModel: LogsViewModel) {

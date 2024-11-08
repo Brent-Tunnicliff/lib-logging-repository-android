@@ -10,16 +10,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.tunnicliff.logging.demo.container.ViewModelFactory
 import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.ui.component.button.SimpleButton
 import dev.tunnicliff.ui.component.card.BaseCard
@@ -30,33 +27,12 @@ import dev.tunnicliff.ui.theme.PreviewerTheme
 import dev.tunnicliff.ui.theme.ThemedPreviewer
 
 @Composable
-fun DemoOptionsView(viewModel: DemoOptionsViewModel = viewModel()) {
-    var logLevel by remember { mutableStateOf(LogLevel.DEBUG) }
-    var includeThrowable by remember { mutableStateOf(false) }
-    var numberToSend by remember { mutableIntStateOf(1) }
-
+fun DemoOptionsView(viewModel: DemoOptionsViewModel = viewModel(factory = ViewModelFactory)) {
     BaseCard {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = "Log")
-
-            SimplePicker(
-                values = LogLevel.entries.map {
-                    BasicPickerValue(
-                        description = it.name,
-                        value = it
-                    )
-                },
-                initialValue = logLevel.name,
-                onValueChanged = {
-                    logLevel = it.value
-                }
-            )
-
-            HorizontalDivider(Modifier.padding(vertical = 8.dp))
-
             Text(text = "Send log")
 
             SimplePicker(
@@ -66,41 +42,34 @@ fun DemoOptionsView(viewModel: DemoOptionsViewModel = viewModel()) {
                         value = it
                     )
                 },
-                initialValue = logLevel.name,
+                initialValue = viewModel.logLevel.collectAsState().value.name,
                 onValueChanged = {
-                    logLevel = it.value
+                    viewModel.updateLogLevel(it.value)
                 }
             )
 
             LabeledSwitch(
                 label = "Include throwable",
-                checked = includeThrowable,
+                checked = viewModel.includeThrowable.collectAsState().value,
                 onCheckedChange = {
-                    includeThrowable = it
-                }
-            )
-
-            SimplePicker(
-                values = listOf(1, 5, 10, 50).map {
-                    BasicPickerValue(
-                        description = it.toString(),
-                        value = it
-                    )
-                },
-                initialValue = numberToSend.toString(),
-                onValueChanged = {
-                    numberToSend = it.value
+                    viewModel.updateIncludeThrowable(it)
                 }
             )
 
             SimpleButton(
-                text = if (numberToSend == 1) "Send log" else "Send logs",
+                text = "Send log",
                 onClick = {
-                    viewModel.sendLogsClicked(
-                        logLevel = logLevel,
-                        includeThrowable = includeThrowable,
-                        numberToSend = numberToSend
-                    )
+                    viewModel.sendLogsClicked()
+                }
+            )
+
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+            LabeledSwitch(
+                label = "Keep sending random logs",
+                checked = viewModel.sendRandomLogs.collectAsState().value,
+                onCheckedChange = {
+                    viewModel.updateSendRandomLogs(it)
                 }
             )
         }
@@ -119,7 +88,13 @@ private fun PreviewDarkTheme() = PreviewContent(PreviewerTheme.DARK)
 private fun PreviewContent(theme: PreviewerTheme) {
     ThemedPreviewer(theme) {
         Surface(color = MaterialTheme.colorScheme.surfaceVariant) {
-            DemoOptionsView()
+            DemoOptionsView(
+                viewModel = PreviewDemoOptionsViewModel(
+                    logLevel = LogLevel.DEBUG,
+                    includeThrowable = false,
+                    sendRandomLogs = false
+                )
+            )
         }
     }
 }

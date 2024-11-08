@@ -3,7 +3,10 @@
 package dev.tunnicliff.logging
 
 import android.content.Context
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import dev.tunnicliff.container.Container
+import dev.tunnicliff.logging.internal.database.LogEntity
 import dev.tunnicliff.logging.internal.database.LoggingDatabase
 import dev.tunnicliff.logging.logger.LogUploadHandler
 import dev.tunnicliff.logging.logger.Logger
@@ -16,10 +19,9 @@ import dev.tunnicliff.logging.logger.internal.LogUploader
 import dev.tunnicliff.logging.logger.internal.LogWriter
 import dev.tunnicliff.logging.logger.internal.SystemLog
 import dev.tunnicliff.logging.logger.internal.SystemLogWrapper
-import dev.tunnicliff.logging.view.internal.DefaultLogsViewModel
-import dev.tunnicliff.logging.view.internal.LogsViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 /**
  * Dependency injection container for the library.
@@ -33,6 +35,8 @@ class LoggingContainer private constructor(
     }
 
     companion object {
+        private const val PAGE_SIZE = 10
+        private const val MAX_SIZE = 40
         private lateinit var _SHARED: LoggingContainer
 
         /**
@@ -59,12 +63,9 @@ class LoggingContainer private constructor(
 
     // region Public
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun logger(): Logger = resolveSingleton {
         DefaultLogger(
-            // Using GlobalScope is not ideal, but wanted to avoid having to make each log function `suspend`.
-            // Probably not an issue though since ideally LoggingRepository's lifecycle should match the app.
-            coroutineScope = GlobalScope,
+            coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
             loggingConfigurationManager = loggingConfigurationManager(),
             logUploader = logUploader(),
             logWriter = logWriter(),
@@ -83,14 +84,21 @@ class LoggingContainer private constructor(
 
     // region Internal
 
-    internal fun logsViewModel(): LogsViewModel =
-        DefaultLogsViewModel(loggingDatabase = loggingRepositoryDatabase())
+    internal fun loggingPager(): Pager<Int, LogEntity> =
+        Pager(
+            PagingConfig(
+                pageSize = PAGE_SIZE,
+                maxSize = MAX_SIZE
+            )
+        ) {
+            loggingDatabase().logDao().getLogs()
+        }
 
     // endregion
 
     // region Private
 
-    private fun loggingRepositoryDatabase(): LoggingDatabase = resolveSingleton {
+    private fun loggingDatabase(): LoggingDatabase = resolveSingleton {
         LoggingDatabase.new(dependencies.applicationContext())
     }
 
@@ -105,7 +113,7 @@ class LoggingContainer private constructor(
 
     private fun logWriter(): LogWriter = resolveWeak {
         DefaultLogWriter(
-            database = loggingRepositoryDatabase(),
+            database = loggingDatabase(),
             logUploader = { logUploader() },
             systemLog = systemLog(),
         )

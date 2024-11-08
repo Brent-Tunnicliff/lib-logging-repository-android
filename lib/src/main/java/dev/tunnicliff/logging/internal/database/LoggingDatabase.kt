@@ -19,7 +19,7 @@ internal abstract class LoggingDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context,
                 LoggingDatabase::class.java,
-                "logging-repository-database"
+                "lib-logging-database"
             ).build()
     }
 
