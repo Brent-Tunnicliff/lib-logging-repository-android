@@ -1,9 +1,11 @@
-# template-lib-android
+# lib-logging-android
 
-Template as a base for all my Android libraries.
-Project contains the library `lib/` and a demo app `app/`.
+[![](https://jitpack.io/v/Brent-Tunnicliff/lib-logging-android.svg)](https://jitpack.io/#Brent-Tunnicliff/lib-logging-android)
 
-After generating the repository find all cases of `replace_me` and rename them.
+Logging that writes to a local database and manages permissions for uploading logs.
+This library does not upload these logs anywhere, but can provide a delegate for sending logs
+if allowed.
+Local logs can be queried and provided to the user via app.
 
 ## Disclaimer
 

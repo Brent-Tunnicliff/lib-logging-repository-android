@@ -1,11 +1,15 @@
+// Copyright © 2024 Brent Tunnicliff <brent@tunnicliff.dev>
+
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
     id("maven-publish")
-    id("org.jetbrains.kotlin.android")
 }
 
 android {
-    namespace = "dev.tunnicliff.replace_me"
+    namespace = "dev.tunnicliff.logging"
     compileSdk = 34
 
     defaultConfig {
@@ -26,12 +30,21 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
+    }
+
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
 }
 
@@ -39,8 +52,8 @@ publishing {
     publications {
         register<MavenPublication>("release") {
             groupId = "dev.tunnicliff"
-            artifactId = "replace_me"
-            version = "0.0.0"
+            artifactId = "logging"
+            version = "0.1.0"
 
             afterEvaluate {
                 from(components["release"])
@@ -49,16 +62,46 @@ publishing {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
+    implementation(libs.androidx.appcompat)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.lib.container.android)
+    implementation(libs.lib.ui.android)
+    implementation(libs.material)
+    implementation(libs.gson)
 
     // Example of github lib.
     // implementation("com.github.Brent-Tunnicliff:temp_poc:0.0.4")
 
-    testImplementation("junit:junit:4.13.2")
+    annotationProcessor(libs.androidx.room.compiler)
 
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    ksp(libs.androidx.room.compiler)
+
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
