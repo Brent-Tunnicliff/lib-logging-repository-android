@@ -20,6 +20,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverage {
+                enableAndroidTestCoverage = true
+                enableUnitTestCoverage = true
+            }
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -86,9 +93,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.gson)
 
-    // Example of github lib.
-    // implementation("com.github.Brent-Tunnicliff:temp_poc:0.0.4")
-
     annotationProcessor(libs.androidx.room.compiler)
 
     ksp(libs.androidx.room.compiler)
@@ -97,6 +101,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.gson)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
 

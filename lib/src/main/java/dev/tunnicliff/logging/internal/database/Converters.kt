@@ -9,6 +9,8 @@ import java.time.Instant
 import java.util.UUID
 
 internal class Converters {
+    private val gson = Gson()
+
     //region Instant
 
     @TypeConverter
@@ -30,10 +32,10 @@ internal class Converters {
     //region Throwable
 
     @TypeConverter
-    fun fromThrowable(value: Throwable): String = Gson().toJson(value)
+    fun fromThrowable(value: Throwable): String = gson.toJson(value)
 
     @TypeConverter
-    fun toThrowable(value: String): Throwable = Gson().fromJson(value, Throwable::class.java)
+    fun toThrowable(value: String): Throwable = gson.fromJson(value, Throwable::class.java)
 
     // endregion
     // region UUID

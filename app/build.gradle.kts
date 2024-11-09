@@ -23,6 +23,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverage {
+                enableAndroidTestCoverage = true
+                enableUnitTestCoverage = true
+            }
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -42,6 +49,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 
