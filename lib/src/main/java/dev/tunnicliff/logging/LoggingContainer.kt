@@ -3,6 +3,9 @@
 package dev.tunnicliff.logging
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import dev.tunnicliff.container.Container
@@ -19,46 +22,41 @@ import dev.tunnicliff.logging.logger.internal.LogUploader
 import dev.tunnicliff.logging.logger.internal.LogWriter
 import dev.tunnicliff.logging.logger.internal.SystemLog
 import dev.tunnicliff.logging.logger.internal.SystemLogWrapper
+import dev.tunnicliff.logging.view.internal.DefaultLogsViewModel
+import dev.tunnicliff.logging.view.internal.LogsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlin.reflect.KClass
 
 /**
  * Dependency injection container for the library.
  */
-class LoggingContainer private constructor(
+class LoggingContainer(
     private val dependencies: Dependencies
 ) : Container() {
     interface Dependencies {
         fun applicationContext(): Context
-        fun uploadHandler(): LogUploadHandler?
+        fun uploadHandler(): LogUploadHandler
+    }
+
+    object ViewModelFactory : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T =
+            when (modelClass) {
+                LogsViewModel::class -> DefaultLogsViewModel(RESOLVER.loggingPager()) as T
+                else -> throw Exception("Unable to resolve view model of type $modelClass")
+            }
     }
 
     companion object {
+        private lateinit var RESOLVER: LoggingContainer
         private const val PAGE_SIZE = 10
         private const val MAX_SIZE = 40
-        private lateinit var _SHARED: LoggingContainer
+    }
 
-        /**
-         * Shared instance of the container.
-         *
-         * `initialise()` must be called before this can be referenced otherwise
-         *
-         * @throws UninitializedPropertyAccessException if `initialise()` has not been called first.
-         */
-        val SHARED: LoggingContainer
-            get() = _SHARED
-
-        /**
-         * Initialises the container.
-         *
-         * After which `SHARED` will be safe to use.
-         *
-         * @property dependencies the external dependencies required by the container.
-         */
-        fun initialise(dependencies: Dependencies) {
-            _SHARED = LoggingContainer(dependencies)
-        }
+    init {
+        RESOLVER = this
     }
 
     // region Public
@@ -82,7 +80,7 @@ class LoggingContainer private constructor(
 
     // endregion
 
-    // region Internal
+    // region Private
 
     internal fun loggingPager(): Pager<Int, LogEntity> =
         Pager(
@@ -93,10 +91,6 @@ class LoggingContainer private constructor(
         ) {
             loggingDatabase().logDao().getLogs()
         }
-
-    // endregion
-
-    // region Private
 
     private fun loggingDatabase(): LoggingDatabase = resolveSingleton {
         LoggingDatabase.new(dependencies.applicationContext())

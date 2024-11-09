@@ -18,7 +18,7 @@ internal class DefaultLogUploader(
     // Making `logWriter` a lambda to avoid cycle dependency.
     private val logWriter: () -> LogWriter,
     private val systemLog: SystemLog,
-    private val uploadHandler: LogUploadHandler?
+    private val uploadHandler: LogUploadHandler
 ) : LogUploader {
     private companion object {
         const val TAG = "DefaultLogUploader"
@@ -28,7 +28,7 @@ internal class DefaultLogUploader(
 
     override suspend fun upload(logContext: LogContext): Boolean {
         val permissionToUpload = loggingConfigurationManager.getUploadPermission().first().isAllowed
-        if (uploadHandler == null || !permissionToUpload) {
+        if (!permissionToUpload) {
             return false
         }
 

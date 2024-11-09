@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.tunnicliff.logging.demo.container.ViewModelFactory
+import dev.tunnicliff.logging.demo.AppContainer
 import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.ui.component.button.SimpleButton
 import dev.tunnicliff.ui.component.card.BaseCard
@@ -27,7 +27,7 @@ import dev.tunnicliff.ui.theme.PreviewerTheme
 import dev.tunnicliff.ui.theme.ThemedPreviewer
 
 @Composable
-fun DemoOptionsView(viewModel: DemoOptionsViewModel = viewModel(factory = ViewModelFactory)) {
+fun DemoOptionsView(viewModel: DemoOptionsViewModel = viewModel(factory = AppContainer.ViewModelFactory)) {
     BaseCard {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

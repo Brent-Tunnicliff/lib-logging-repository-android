@@ -4,7 +4,7 @@ package dev.tunnicliff.logging.demo.view.helper
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.tunnicliff.logging.demo.Log
+import dev.tunnicliff.logging.demo.AppLog
 import dev.tunnicliff.logging.model.LogLevel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -92,11 +92,11 @@ class DefaultDemoOptionsViewModel : DemoOptionsViewModel() {
     ) {
         val throwable = if (includeThrowable) Exception(getRandomString()) else null
         when (logLevel) {
-            LogLevel.CRITICAL -> Log.critical(TAG, getRandomString(), throwable)
-            LogLevel.DEBUG -> Log.debug(TAG, getRandomString(), throwable)
-            LogLevel.ERROR -> Log.error(TAG, getRandomString(), throwable)
-            LogLevel.INFO -> Log.info(TAG, getRandomString(), throwable)
-            LogLevel.WARNING -> Log.warning(TAG, getRandomString(), throwable)
+            LogLevel.CRITICAL -> AppLog.critical(TAG, getRandomString(), throwable)
+            LogLevel.DEBUG -> AppLog.debug(TAG, getRandomString(), throwable)
+            LogLevel.ERROR -> AppLog.error(TAG, getRandomString(), throwable)
+            LogLevel.INFO -> AppLog.info(TAG, getRandomString(), throwable)
+            LogLevel.WARNING -> AppLog.warning(TAG, getRandomString(), throwable)
         }
     }
 

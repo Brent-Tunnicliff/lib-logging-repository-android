@@ -3,8 +3,7 @@
 package dev.tunnicliff.logging.demo
 
 import android.app.Application
-import dev.tunnicliff.logging.LoggingContainer
-import dev.tunnicliff.logging.demo.container.AppContainer
+import android.content.Context
 import dev.tunnicliff.logging.model.LogLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,14 +12,19 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class MainApplication : Application() {
+    private val container = AppContainer(
+        object : AppContainer.Dependencies {
+            override fun applicationContext(): Context =
+                this@MainApplication.applicationContext
+        }
+    )
+
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     override fun onCreate() {
         super.onCreate()
-        // We need to initialise the DI container asap.
-        AppContainer.initialise(applicationContext)
         applicationScope.launch {
-            LoggingContainer.SHARED.loggingConfigurationManager().setMinimumLogLevel(LogLevel.DEBUG)
+            container.loggingConfigurationManager().setMinimumLogLevel(LogLevel.DEBUG)
         }
     }
 
