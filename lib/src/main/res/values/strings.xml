@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Copyright © 2024 Brent Tunnicliff <brent@tunnicliff.dev> -->
 
 <resources>
+    <string name="log_card_cause">Caused by: %1$s</string>
     <string name="log_card_error">Error: %1$s</string>
     <string name="log_card_not_uploaded">Not uploaded</string>
     <string name="log_card_uploaded">Uploaded</string>
