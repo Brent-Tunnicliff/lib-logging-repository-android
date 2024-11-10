@@ -90,7 +90,10 @@ class DefaultDemoOptionsViewModel : DemoOptionsViewModel() {
         logLevel: LogLevel,
         includeThrowable: Boolean
     ) {
-        val throwable = if (includeThrowable) Exception(getRandomString()) else null
+        val throwable = if (includeThrowable)
+            Exception(getRandomString(), Throwable(getRandomString(), Throwable(getRandomString())))
+        else
+            null
         when (logLevel) {
             LogLevel.CRITICAL -> AppLog.critical(TAG, getRandomString(), throwable)
             LogLevel.DEBUG -> AppLog.debug(TAG, getRandomString(), throwable)
@@ -101,19 +104,22 @@ class DefaultDemoOptionsViewModel : DemoOptionsViewModel() {
     }
 
     private fun getRandomString(): String {
-        var result = ""
+        val words: MutableList<String> = mutableListOf()
         val numberOfWords = Random.nextInt(1, 100)
-        for (word in 1..numberOfWords) {
-            val numberOfCharacters = Random.nextInt(1, 100)
+        for (index in 1..numberOfWords) {
+            var word = ""
+            val numberOfCharacters = Random.nextInt(1, 10)
 
             for (character in 1..numberOfCharacters) {
-                result += Random.nextInt(0, CHAR_POOL.size).let {
+                word += Random.nextInt(0, CHAR_POOL.size).let {
                     CHAR_POOL[it]
                 }
             }
+
+            words.add(word)
         }
 
-        return result
+        return words.joinToString(separator = " ")
     }
 
     // endregion
