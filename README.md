@@ -1,6 +1,6 @@
 # lib-logging-android
 
-[![](https://jitpack.io/v/Brent-Tunnicliff/lib-logging-android.svg)](https://jitpack.io/#Brent-Tunnicliff/lib-logging-android)
+[![](https://jitpack.io/v/Brent-Tunnicliff/lib-logging-android.svg)](https://jitpack.io/#Brent-Tunnicliff/lib-logging-android) ![Weekly download statistics](https://jitpack.io/v/Brent-Tunnicliff/lib-logging-android/week.svg) ![Monthly download statistics](https://jitpack.io/v/Brent-Tunnicliff/lib-logging-android/month.svg)
 
 Logging that writes to a local database and manages permissions for uploading logs.
 This library does not upload these logs anywhere, but can provide a delegate for sending logs
