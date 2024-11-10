@@ -35,6 +35,16 @@ class ConvertersTests {
     }
 
     @Test
+    fun throwable() {
+        val nestedTwo = LogEntity.Throwable("type 3", "Nested two", null)
+        val nestedOne = LogEntity.Throwable("type 2", "Nested one", nestedTwo)
+        val initialValue = LogEntity.Throwable("type 1", "Hello world!", nestedOne)
+        val convertedValue = converters.fromThrowable(initialValue)
+        val result = converters.toThrowable(convertedValue)
+        assertEquals(initialValue, result)
+    }
+
+    @Test
     fun uuid() {
         val initialValue = UUID.randomUUID()
         val convertedValue = converters.fromUUID(initialValue)

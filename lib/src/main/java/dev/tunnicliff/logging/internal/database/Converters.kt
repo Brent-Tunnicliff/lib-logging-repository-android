@@ -3,14 +3,13 @@
 package dev.tunnicliff.logging.internal.database
 
 import androidx.room.TypeConverter
-import com.google.gson.Gson
 import dev.tunnicliff.logging.model.LogLevel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.time.Instant
 import java.util.UUID
 
 internal class Converters {
-    private val gson = Gson()
-
     //region Instant
 
     @TypeConverter
@@ -32,10 +31,12 @@ internal class Converters {
     //region Throwable
 
     @TypeConverter
-    fun fromThrowable(value: Throwable): String = gson.toJson(value)
+    fun fromThrowable(value: LogEntity.Throwable): String =
+        Json.encodeToString(value)
 
     @TypeConverter
-    fun toThrowable(value: String): Throwable = gson.fromJson(value, Throwable::class.java)
+    fun toThrowable(value: String): LogEntity.Throwable =
+        Json.decodeFromString(value)
 
     // endregion
     // region UUID

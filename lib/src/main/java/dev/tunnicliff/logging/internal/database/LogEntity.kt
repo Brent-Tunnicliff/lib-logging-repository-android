@@ -5,6 +5,7 @@ package dev.tunnicliff.logging.internal.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import dev.tunnicliff.logging.model.LogLevel
+import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.util.UUID
 
@@ -22,7 +23,7 @@ internal data class LogEntity(
     val throwable: Throwable?,
     var uploaded: Boolean
 ) {
-    internal companion object {
+    companion object {
         /**
          * Provides a dummy instance for use in previews and tests.
          */
@@ -47,4 +48,46 @@ internal data class LogEntity(
                 uploaded = uploaded
             )
     }
+
+    /**
+     * Simple mapping of throwable to make storing simpler.
+     */
+    @Serializable
+    data class Throwable(
+        val type: String,
+        val message: String?,
+        val cause: Throwable?
+    ) {
+        companion object {
+            fun mock(
+                type: String = "kotlin.Throwable",
+                message: String? = "This is a message",
+                cause: Throwable? = null,
+            ): Throwable =
+                Throwable(
+                    type = type,
+                    message = message,
+                    cause = cause
+                )
+        }
+
+        override fun toString(): String =
+            "$type: $message"
+    }
+}
+
+internal fun Throwable.toEntity(): LogEntity.Throwable =
+    LogEntity.Throwable(
+        type = this::class.qualifiedName ?: this::class.simpleName ?: "Unknown",
+        message = message,
+        cause = cause?.toEntity()
+    )
+
+internal fun LogEntity.Throwable.flatCauses(): List<LogEntity.Throwable> {
+    if (cause == null) {
+        return emptyList()
+    }
+
+    val nextCauses = cause.flatCauses()
+    return listOf(cause) + nextCauses
 }

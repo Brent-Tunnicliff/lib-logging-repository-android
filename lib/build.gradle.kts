@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.serialization)
     id("maven-publish")
 }
 
@@ -76,7 +77,6 @@ room {
 dependencies {
     implementation(libs.androidx.appcompat)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
@@ -84,14 +84,15 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.material3)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.paging.compose)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.lib.container.android)
     implementation(libs.lib.ui.android)
     implementation(libs.material)
-    implementation(libs.gson)
 
     annotationProcessor(libs.androidx.room.compiler)
 
@@ -101,7 +102,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.androidx.room.testing)
-    testImplementation(libs.gson)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
 

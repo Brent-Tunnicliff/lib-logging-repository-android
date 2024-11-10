@@ -2,8 +2,10 @@
 
 package dev.tunnicliff.logging.model.internal
 
-import com.google.gson.Gson
+import dev.tunnicliff.logging.internal.database.toEntity
 import dev.tunnicliff.logging.model.LogLevel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 internal data class LogContext(
     val level: LogLevel,
@@ -13,7 +15,7 @@ internal data class LogContext(
 ) {
     override fun toString(): String {
         val throwableString = throwable?.let {
-            Gson().toJson(it)
+            Json.encodeToString(it.toEntity())
         } ?: "null"
 
         return listOf(

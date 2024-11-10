@@ -4,6 +4,7 @@ package dev.tunnicliff.logging.logger.internal
 
 import dev.tunnicliff.logging.internal.database.LogEntity
 import dev.tunnicliff.logging.internal.database.LoggingDatabase
+import dev.tunnicliff.logging.internal.database.toEntity
 import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.logging.model.internal.LogContext
 import java.io.IOException
@@ -43,7 +44,7 @@ internal class DefaultLogWriter(
                     level = context.level,
                     message = context.message,
                     tag = context.tag,
-                    throwable = context.throwable,
+                    throwable = context.throwable?.toEntity(),
                     timestampCreated = now,
                     timestampUpdated = now,
                     uploaded = false
