@@ -62,13 +62,15 @@ class LoggingContainer(
     // region Public
 
     fun logger(): Logger = resolveSingleton {
-        DefaultLogger(
+        val logger = DefaultLogger(
             coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
             loggingConfigurationManager = loggingConfigurationManager(),
             logUploader = logUploader(),
             logWriter = logWriter(),
             systemLog = systemLog()
         )
+        logger.info(tag = "DefaultLogger", message = "Logger initialised")
+        logger
     }
 
     fun loggingConfigurationManager(): LoggingConfigurationManager = resolveSingleton {

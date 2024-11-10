@@ -13,6 +13,21 @@ internal data class LogContext(
     val message: String,
     val throwable: Throwable?
 ) {
+    companion object {
+        fun mock(
+            level: LogLevel = LogLevel.DEBUG,
+            tag: String = "MockLogContext",
+            message: String = "This is a message",
+            throwable: Throwable? = null
+        ): LogContext =
+            LogContext(
+                level = level,
+                tag = tag,
+                message = message,
+                throwable = throwable
+            )
+    }
+
     override fun toString(): String {
         val throwableString = throwable?.let {
             Json.encodeToString(it.toEntity())

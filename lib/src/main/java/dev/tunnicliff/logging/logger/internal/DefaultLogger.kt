@@ -18,14 +18,6 @@ internal class DefaultLogger(
     private val logWriter: LogWriter,
     private val systemLog: SystemLog
 ) : Logger {
-    private companion object {
-        const val TAG = "DefaultLogger"
-    }
-
-    init {
-        info(tag = TAG, message = "Logger initialised")
-    }
-
     //region Logger
 
     override fun debug(tag: String, message: String, throwable: Throwable?) {
