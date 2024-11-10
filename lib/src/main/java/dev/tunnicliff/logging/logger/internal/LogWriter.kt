@@ -20,6 +20,13 @@ internal interface LogWriter {
     suspend fun writeLog(context: LogContext): UUID
 
     suspend fun setLogAsUploaded(id: UUID, uploaded: Boolean)
+
+    /**
+     * Deletes logs older than the input.
+     *
+     * @return Number of logs deleted.
+     */
+    suspend fun deleteLogsOlderThan(timestamp: Instant): Int
 }
 
 internal class DefaultLogWriter(
@@ -76,6 +83,17 @@ internal class DefaultLogWriter(
             throw exception
         }
     }
+
+    override suspend fun deleteLogsOlderThan(timestamp: Instant): Int =
+        try {
+            database.logDao().deleteLogsOlderThan(timestamp)
+        } catch (exception: IOException) {
+            logException(
+                cause = "deleteLogsOlderThan $timestamp",
+                exception = exception
+            )
+            throw exception
+        }
 
     // endregion
 

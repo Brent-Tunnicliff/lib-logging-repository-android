@@ -76,7 +76,8 @@ class LoggingContainer(
     fun loggingConfigurationManager(): LoggingConfigurationManager = resolveSingleton {
         DefaultLoggingConfigurationManager(
             context = dependencies.applicationContext(),
-            logger = { logger() }
+            logger = { logger() },
+            database = loggingDatabase()
         )
     }
 

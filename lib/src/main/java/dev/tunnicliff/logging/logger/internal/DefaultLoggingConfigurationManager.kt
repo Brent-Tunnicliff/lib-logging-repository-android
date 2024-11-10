@@ -9,19 +9,24 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dev.tunnicliff.logging.internal.database.LoggingDatabase
 import dev.tunnicliff.logging.logger.Logger
 import dev.tunnicliff.logging.logger.LoggingConfigurationManager
+import dev.tunnicliff.logging.model.LocalPersistenceRetention
 import dev.tunnicliff.logging.model.LogLevel
 import dev.tunnicliff.logging.model.LogUploadPermission
+import dev.tunnicliff.logging.view.internal.toLogDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import java.time.Instant
 
 internal class DefaultLoggingConfigurationManager(
     private val context: Context,
     // Making `logger` a lambda to avoid cycle dependency.
-    private val logger: () -> Logger
+    private val logger: () -> Logger,
+    private val database: LoggingDatabase
 ) : LoggingConfigurationManager {
     private companion object {
         const val TAG = "DefaultLoggingConfigurationManager"
@@ -49,6 +54,15 @@ internal class DefaultLoggingConfigurationManager(
         setPreference(Preference.UploadPermission, value.name)
     }
 
+    override suspend fun deleteOldLogs(retention: LocalPersistenceRetention): Int {
+        val timestamp = retention.getTimestampFrom(Instant.now())
+        logger().info(tag = TAG, message = "Deleting logs older than ${timestamp.toLogDate()}")
+        val result = database.logDao().deleteLogsOlderThan(timestamp)
+        logger().info(tag = TAG, message = "Deleted $result logs")
+        logDatabaseSize()
+        return result
+    }
+
     // endregion
 
     // region Private functions
@@ -74,6 +88,15 @@ internal class DefaultLoggingConfigurationManager(
                     mapValue(value)
                 } ?: preference.defaultValue
             }
+
+    private suspend fun logDatabaseSize() {
+        val databaseSizeInfos = database.logDao().getDatabaseSizeInfo()
+        logger().debug(tag = TAG, message = "Logs database info: $databaseSizeInfos")
+        val databaseSize = databaseSizeInfos.fold(0) { acc, sizeInfo ->
+            acc + sizeInfo.calculateSize()
+        }
+        logger().info(tag = TAG, message = "Logs database size: ${databaseSize.sizeFromBytes()}")
+    }
 
     private suspend fun <StoredValue, Value> setPreference(
         preference: Preference<StoredValue, Value>,

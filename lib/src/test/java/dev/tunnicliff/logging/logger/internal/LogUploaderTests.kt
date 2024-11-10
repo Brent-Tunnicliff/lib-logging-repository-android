@@ -1,11 +1,9 @@
 // Copyright © 2024 Brent Tunnicliff <brent@tunnicliff.dev>
 
-package dev.tunnicliff.logging.logger
+package dev.tunnicliff.logging.logger.internal
 
-import dev.tunnicliff.logging.logger.internal.DefaultLogUploader
-import dev.tunnicliff.logging.logger.internal.LogUploader
-import dev.tunnicliff.logging.logger.internal.LogWriter
-import dev.tunnicliff.logging.logger.internal.SystemLog
+import dev.tunnicliff.logging.logger.LogUploadHandler
+import dev.tunnicliff.logging.logger.LoggingConfigurationManager
 import dev.tunnicliff.logging.model.LogUploadPermission
 import dev.tunnicliff.logging.model.internal.LogContext
 import dev.tunnicliff.logging.test.helper.MockException

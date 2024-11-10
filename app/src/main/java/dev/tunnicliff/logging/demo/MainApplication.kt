@@ -24,7 +24,10 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         applicationScope.launch {
-            container.loggingConfigurationManager().setMinimumLogLevel(LogLevel.DEBUG)
+            with(container.loggingConfigurationManager()) {
+                setMinimumLogLevel(LogLevel.DEBUG)
+                deleteOldLogs()
+            }
         }
     }
 
