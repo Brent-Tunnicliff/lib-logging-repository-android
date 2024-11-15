@@ -17,7 +17,7 @@ import dev.tunnicliff.logging.model.LogLevel
 import kotlin.reflect.KClass
 
 class AppContainer(
-    private val dependencies: Dependencies
+    dependencies: Dependencies
 ) : Container() {
     // region Types
 
