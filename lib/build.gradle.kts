@@ -56,15 +56,43 @@ android {
     }
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "dev.tunnicliff"
-            artifactId = "logging"
-            version = "1.0.0"
-
-            afterEvaluate {
+afterEvaluate {
+    publishing {
+        publications {
+            register<MavenPublication>("release") {
                 from(components["release"])
+                groupId = "dev.tunnicliff"
+                artifactId = "lib-logging-android"
+                version = "1.0.0-beta.4"
+
+                pom {
+                    packaging = "aar"
+                    name.set("lib-logging-android")
+                    description.set("lib-logging-android: Logging library for android applications.")
+                    url.set("https://github.com/Brent-Tunnicliff/lib-logging-android")
+                    inceptionYear.set("2024")
+
+                    licenses {
+                        license {
+                            name.set("MIT License")
+                            url.set("https://opensource.org/licenses/MIT")
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id.set("brent")
+                            name.set("Brent Tunnicliff")
+                            email.set("brent@tunnicliff.dev")
+                        }
+                    }
+
+                    scm {
+                        connection.set("scm:git:https://github.com/Brent-Tunnicliff/lib-logging-android.git")
+                        developerConnection.set("scm:git:ssh://git@github.com:Brent-Tunnicliff/lib-logging-android.git")
+                        url.set("https://github.com/Brent-Tunnicliff/lib-logging-android")
+                    }
+                }
             }
         }
     }
