@@ -9,5 +9,8 @@ Local logs can be queried and provided to the user via app.
 
 ## Disclaimer
 
-This project are open source and open to anyone to use as they see fit.
-But I am building these with myself as the main target audience.
+This project is open source and open to anyone to use as they see fit.
+But I am building this with myself as the main target audience and I will not be expanding this
+beyond my own needs.
+If you want it to work differently, then fork and manage those changes yourself.
+But if there are any bugs or suggestions you have for this project, feel free to reach out!
