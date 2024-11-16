@@ -63,7 +63,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "dev.tunnicliff"
                 artifactId = "lib-logging-android"
-                version = "1.0.0-beta.5"
+                version = "1.0.0-beta.6"
 
                 pom {
                     packaging = "aar"
