@@ -14,7 +14,6 @@ import dev.tunnicliff.logging.internal.database.LoggingDatabase
 import dev.tunnicliff.logging.logger.LogUploadHandler
 import dev.tunnicliff.logging.logger.Logger
 import dev.tunnicliff.logging.logger.LoggingConfigurationManager
-import dev.tunnicliff.logging.logger.internal.BackupLogger
 import dev.tunnicliff.logging.logger.internal.DefaultLogUploader
 import dev.tunnicliff.logging.logger.internal.DefaultLogWriter
 import dev.tunnicliff.logging.logger.internal.DefaultLogger
@@ -58,15 +57,9 @@ class LoggingContainer(
         private const val MAX_SIZE = 40
 
         private var SHARED: LoggingContainer? = null
-        private var BACKUP_LOGGER: Logger? = null
 
-        internal val LOGGER: Logger
+        internal val LOGGER: Logger?
             get() = SHARED?.logger()
-                ?: BACKUP_LOGGER
-                ?: BackupLogger()
-                    .also {
-                        BACKUP_LOGGER = it
-                    }
     }
 
     init {
@@ -83,7 +76,7 @@ class LoggingContainer(
             logWriter = logWriter(),
             systemLog = systemLog()
         )
-        logger.info(tag = "DefaultLogger", message = "Logger initialised")
+        logger.info(tag = DefaultLogger.TAG, message = "Logger initialised")
         logger
     }
 
