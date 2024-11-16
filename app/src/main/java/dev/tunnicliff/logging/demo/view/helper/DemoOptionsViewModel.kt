@@ -4,7 +4,7 @@ package dev.tunnicliff.logging.demo.view.helper
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.tunnicliff.logging.demo.AppLog
+import dev.tunnicliff.logging.LOG
 import dev.tunnicliff.logging.model.LogLevel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -95,11 +95,11 @@ class DefaultDemoOptionsViewModel : DemoOptionsViewModel() {
         else
             null
         when (logLevel) {
-            LogLevel.CRITICAL -> AppLog.critical(TAG, getRandomString(), throwable)
-            LogLevel.DEBUG -> AppLog.debug(TAG, getRandomString(), throwable)
-            LogLevel.ERROR -> AppLog.error(TAG, getRandomString(), throwable)
-            LogLevel.INFO -> AppLog.info(TAG, getRandomString(), throwable)
-            LogLevel.WARNING -> AppLog.warning(TAG, getRandomString(), throwable)
+            LogLevel.CRITICAL -> LOG.critical(TAG, getRandomString(), throwable)
+            LogLevel.DEBUG -> LOG.debug(TAG, getRandomString(), throwable)
+            LogLevel.ERROR -> LOG.error(TAG, getRandomString(), throwable)
+            LogLevel.INFO -> LOG.info(TAG, getRandomString(), throwable)
+            LogLevel.WARNING -> LOG.warning(TAG, getRandomString(), throwable)
         }
     }
 

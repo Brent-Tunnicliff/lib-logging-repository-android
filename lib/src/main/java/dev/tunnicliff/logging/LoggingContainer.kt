@@ -27,6 +27,7 @@ import dev.tunnicliff.logging.view.internal.LogsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import java.util.concurrent.CountDownLatch
 import kotlin.reflect.KClass
 
 /**
@@ -44,19 +45,29 @@ class LoggingContainer(
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T =
             when (modelClass) {
-                LogsViewModel::class -> DefaultLogsViewModel(RESOLVER.loggingPager()) as T
+                LogsViewModel::class -> DefaultLogsViewModel(SHARED.loggingPager()) as T
                 else -> throw Exception("Unable to resolve view model of type $modelClass")
             }
     }
 
     companion object {
-        private lateinit var RESOLVER: LoggingContainer
+        private lateinit var SHARED: LoggingContainer
         private const val PAGE_SIZE = 10
         private const val MAX_SIZE = 40
+        private val LATCH = CountDownLatch(1)
+
+        internal val LOGGER: Logger
+            get() {
+                // We need to wait for the container to be initialised before we continue.
+                // Doing this to be careful in case logs happen on background threads on app launch.
+                LATCH.await()
+                return SHARED.logger()
+            }
     }
 
     init {
-        RESOLVER = this
+        SHARED = this
+        LATCH.countDown()
     }
 
     // region Public
