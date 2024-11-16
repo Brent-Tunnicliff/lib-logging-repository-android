@@ -14,6 +14,7 @@ import dev.tunnicliff.logging.internal.database.LoggingDatabase
 import dev.tunnicliff.logging.logger.LogUploadHandler
 import dev.tunnicliff.logging.logger.Logger
 import dev.tunnicliff.logging.logger.LoggingConfigurationManager
+import dev.tunnicliff.logging.logger.internal.BackupLogger
 import dev.tunnicliff.logging.logger.internal.DefaultLogUploader
 import dev.tunnicliff.logging.logger.internal.DefaultLogWriter
 import dev.tunnicliff.logging.logger.internal.DefaultLogger
@@ -27,7 +28,6 @@ import dev.tunnicliff.logging.view.internal.LogsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import java.util.concurrent.CountDownLatch
 import kotlin.reflect.KClass
 
 /**
@@ -42,32 +42,35 @@ class LoggingContainer(
     }
 
     object ViewModelFactory : ViewModelProvider.Factory {
+        private val resolver: LoggingContainer
+            get() = SHARED!!
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T =
             when (modelClass) {
-                LogsViewModel::class -> DefaultLogsViewModel(SHARED.loggingPager()) as T
+                LogsViewModel::class -> DefaultLogsViewModel(resolver.loggingPager()) as T
                 else -> throw Exception("Unable to resolve view model of type $modelClass")
             }
     }
 
     companion object {
-        private lateinit var SHARED: LoggingContainer
         private const val PAGE_SIZE = 10
         private const val MAX_SIZE = 40
-        private val LATCH = CountDownLatch(1)
+
+        private var SHARED: LoggingContainer? = null
+        private var BACKUP_LOGGER: Logger? = null
 
         internal val LOGGER: Logger
-            get() {
-                // We need to wait for the container to be initialised before we continue.
-                // Doing this to be careful in case logs happen on background threads on app launch.
-                LATCH.await()
-                return SHARED.logger()
-            }
+            get() = SHARED?.logger()
+                ?: BACKUP_LOGGER
+                ?: BackupLogger()
+                    .also {
+                        BACKUP_LOGGER = it
+                    }
     }
 
     init {
         SHARED = this
-        LATCH.countDown()
     }
 
     // region Public
