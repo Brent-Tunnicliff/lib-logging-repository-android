@@ -63,7 +63,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "dev.tunnicliff"
                 artifactId = "lib-logging-android"
-                version = "1.0.0-beta.6"
+                version = "1.0.0-beta.7"
 
                 pom {
                     packaging = "aar"
@@ -113,6 +113,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.common.ktx)
+    implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.room.runtime)
