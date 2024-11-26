@@ -25,7 +25,7 @@ import dev.tunnicliff.ui.theme.ThemedPreviewer
 
 // region Navigation
 
-private const val ROUTE = "dev.tunnicliff.logging.view.LogsView"
+private const val ROUTE = "LogsView"
 
 fun NavGraphBuilder.logsView(context: Context) {
     composable(
