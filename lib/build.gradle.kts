@@ -9,6 +9,8 @@ plugins {
     id("maven-publish")
 }
 
+val javaVersion = JavaVersion.toVersion(libs.versions.java.get())
+
 android {
     namespace = "dev.tunnicliff.logging"
     compileSdk = 35
@@ -38,12 +40,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = javaVersion.toString()
     }
 
     buildFeatures {
