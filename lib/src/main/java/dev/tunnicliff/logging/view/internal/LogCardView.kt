@@ -2,9 +2,15 @@
 
 package dev.tunnicliff.logging.view.internal
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,10 +52,26 @@ internal fun LogCardView(logEntity: LogEntity) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Column {
-                Text(
-                    text = "[${logEntity.level.localisedString()}] [${logEntity.tag}]",
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "[${logEntity.level.localisedString()}] [${logEntity.tag}]",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+
+                    if (expandedState)
+                        Image(
+                            imageVector = Icons.Default.KeyboardArrowUp,
+                            contentDescription = stringResource(R.string.log_card_icon_content_description_expand)
+                        )
+                    else
+                        Image(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = stringResource(R.string.log_card_icon_content_description_collapse)
+                        )
+                }
 
                 Text(
                     text = logEntity.message,
@@ -64,14 +87,6 @@ internal fun LogCardView(logEntity: LogEntity) {
             Column {
                 Text(
                     text = logEntity.timestampCreated.toLogDate(),
-                    style = MaterialTheme.typography.labelSmall
-                )
-
-                Text(
-                    text = if (logEntity.uploaded)
-                        stringResource(id = R.string.log_card_uploaded)
-                    else
-                        stringResource(id = R.string.log_card_not_uploaded),
                     style = MaterialTheme.typography.labelSmall
                 )
             }
@@ -137,8 +152,7 @@ private fun PreviewContent(theme: PreviewerTheme) {
             items(
                 listOf(
                     LogEntity.mock(
-                        level = LogLevel.DEBUG,
-                        uploaded = true
+                        level = LogLevel.DEBUG
                     ),
                     LogEntity.mock(
                         level = LogLevel.INFO,

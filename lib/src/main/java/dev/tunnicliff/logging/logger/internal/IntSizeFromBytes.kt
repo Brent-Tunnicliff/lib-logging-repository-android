@@ -16,5 +16,3 @@ private object IntConstants {
     const val KILOBYTES_IN_MEGABYTE = 1024 * BYTES_IN_KILOBYTE
     const val MEGABYTES_IN_GIGABYTE = 1024 * KILOBYTES_IN_MEGABYTE
 }
-
-

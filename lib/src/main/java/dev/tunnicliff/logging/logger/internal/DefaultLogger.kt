@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 internal class DefaultLogger(
     private val coroutineScope: CoroutineScope,
     private val loggingConfigurationManager: LoggingConfigurationManager,
-    private val logUploader: LogUploader,
     private val logWriter: LogWriter,
+    private val packageName: String,
     private val systemLog: SystemLog
 ) : Logger {
     internal companion object {
@@ -30,6 +30,7 @@ internal class DefaultLogger(
                 level = LogLevel.DEBUG,
                 tag = tag,
                 message = message,
+                packageName = packageName,
                 throwable = throwable
             )
         )
@@ -41,6 +42,7 @@ internal class DefaultLogger(
                 level = LogLevel.INFO,
                 tag = tag,
                 message = message,
+                packageName = packageName,
                 throwable = throwable
             )
         )
@@ -51,6 +53,7 @@ internal class DefaultLogger(
                 level = LogLevel.WARNING,
                 tag = tag,
                 message = message,
+                packageName = packageName,
                 throwable = throwable
             )
         )
@@ -61,6 +64,7 @@ internal class DefaultLogger(
                 level = LogLevel.ERROR,
                 tag = tag,
                 message = message,
+                packageName = packageName,
                 throwable = throwable
             )
         )
@@ -71,6 +75,7 @@ internal class DefaultLogger(
                 level = LogLevel.CRITICAL,
                 tag = tag,
                 message = message,
+                packageName = packageName,
                 throwable = throwable
             )
         )
@@ -90,11 +95,7 @@ internal class DefaultLogger(
             }
 
             systemLog.log(context)
-            val logId = logWriter.writeLog(context)
-            val logDidUpload = logUploader.upload(context)
-            if (logDidUpload) {
-                logWriter.setLogAsUploaded(id = logId, uploaded = true)
-            }
+            logWriter.writeLog(context)
         }
     }
 

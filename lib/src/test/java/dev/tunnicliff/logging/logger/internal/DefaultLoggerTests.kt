@@ -28,15 +28,14 @@ import java.util.UUID
 class DefaultLoggerTests {
     private val logId = UUID.randomUUID()
     private val loggingConfigurationManager = mockk<LoggingConfigurationManager>()
-    private val logUploader = mockk<LogUploader>()
     private val logWriter = mockk<LogWriter>()
+    private val packageName = "DefaultLoggerTests"
     private val systemLog = mockk<SystemLog>()
 
     @Before
     fun setup() {
         every { systemLog.log(any()) } returns Unit
         coEvery { logWriter.writeLog(any()) } returns logId
-        coEvery { logWriter.setLogAsUploaded(any(), any()) } returns Unit
     }
 
     @After
@@ -56,7 +55,6 @@ class DefaultLoggerTests {
             coEvery {
                 loggingConfigurationManager.getMinimumLogLevel()
             } returns MutableStateFlow(LogLevel.DEBUG)
-            coEvery { logUploader.upload(any()) } returns false
 
             val tag = "tag"
             val message = "message"
@@ -65,6 +63,7 @@ class DefaultLoggerTests {
                 level = logLevel,
                 message = message,
                 tag = tag,
+                packageName = packageName,
                 throwable = throwable
             )
 
@@ -81,7 +80,6 @@ class DefaultLoggerTests {
             advanceTimeBy(1000)
             verify { systemLog.log(expected) }
             coVerify { logWriter.writeLog(expected) }
-            coVerify { logUploader.upload(expected) }
         }
     }
 
@@ -101,7 +99,6 @@ class DefaultLoggerTests {
                 coEvery {
                     loggingConfigurationManager.getMinimumLogLevel()
                 } returns MutableStateFlow(minimumLogLevel)
-                coEvery { logUploader.upload(any()) } returns false
 
                 // When logging
                 when (logLevel) {
@@ -116,41 +113,16 @@ class DefaultLoggerTests {
                 advanceTimeBy(1000)
                 verify(exactly = 0) { systemLog.log(any()) }
                 coVerify(exactly = 0) { logWriter.writeLog(any()) }
-                coVerify(exactly = 0) { logUploader.upload(any()) }
             }
         }
-    }
-
-    @Test
-    fun logNotMarkedAsUploaded() = runTest {
-        val logger = logger(this)
-        coEvery {
-            loggingConfigurationManager.getMinimumLogLevel()
-        } returns MutableStateFlow(LogLevel.DEBUG)
-        coEvery { logUploader.upload(any()) } returns false
-        logger.critical("tag", "message")
-        advanceTimeBy(1000)
-        coVerify(exactly = 0) { logWriter.setLogAsUploaded(any(), any()) }
-    }
-
-    @Test
-    fun uploadLogThenMarkedAsUploaded() = runTest {
-        val logger = logger(this)
-        coEvery {
-            loggingConfigurationManager.getMinimumLogLevel()
-        } returns MutableStateFlow(LogLevel.DEBUG)
-        coEvery { logUploader.upload(any()) } returns true
-        logger.critical("tag", "message")
-        advanceTimeBy(1000)
-        coVerify { logWriter.setLogAsUploaded(logId, true) }
     }
 
     private fun logger(coroutineScope: TestScope): Logger =
         DefaultLogger(
             coroutineScope = coroutineScope,
             loggingConfigurationManager = loggingConfigurationManager,
-            logUploader = logUploader,
             logWriter = logWriter,
+            packageName = packageName,
             systemLog = systemLog
         )
 }

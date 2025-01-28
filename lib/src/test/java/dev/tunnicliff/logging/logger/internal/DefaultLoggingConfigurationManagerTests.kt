@@ -13,6 +13,7 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -33,13 +34,14 @@ class DefaultLoggingConfigurationManagerTests {
     @Before
     fun setup() {
         every { database.logDao() } returns logDao
+        mockkObject(Logger)
+        every { Logger.LOGGING } returns logger
         every { logger.debug(any(), any(), any()) } returns Unit
         every { logger.info(any(), any(), any()) } returns Unit
         every { retention.getTimestampFrom(any()) } returns timestamp
 
         loggingConfigurationManager = DefaultLoggingConfigurationManager(
             context = context,
-            logger = { logger },
             database = database
         )
     }

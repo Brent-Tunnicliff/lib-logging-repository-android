@@ -45,4 +45,24 @@ class SystemDatabaseSizeInfoTests {
 
         assertEquals(0, systemDatabaseSizeInfo.calculateSize())
     }
+
+    @Test
+    fun calculateSizeWithZeroPageSizeBytesReturnsZero() {
+        val systemDatabaseSizeInfo = SystemDatabaseSizeInfo(
+            pageSizeBytes = 0,
+            pageCount = 4
+        )
+
+        assertEquals(0, systemDatabaseSizeInfo.calculateSize())
+    }
+
+    @Test
+    fun calculateSizeWithZeroPageCountReturnsZero() {
+        val systemDatabaseSizeInfo = SystemDatabaseSizeInfo(
+            pageSizeBytes = 3,
+            pageCount = 0
+        )
+
+        assertEquals(0, systemDatabaseSizeInfo.calculateSize())
+    }
 }

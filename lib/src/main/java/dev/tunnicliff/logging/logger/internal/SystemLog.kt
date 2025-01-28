@@ -21,6 +21,7 @@ internal class SystemLogWrapper : SystemLog {
         }
 
         with(context) {
+            val message = "[$packageName] $message"
             when (level) {
                 LogLevel.CRITICAL -> Log.wtf(tag, message, throwable)
                 LogLevel.DEBUG -> Log.d(tag, message, throwable)

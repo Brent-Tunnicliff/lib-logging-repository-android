@@ -4,6 +4,7 @@ package dev.tunnicliff.logging.internal.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import dev.tunnicliff.logging.BuildConfig
 import dev.tunnicliff.logging.model.LogLevel
 import kotlinx.serialization.Serializable
 import java.time.Instant
@@ -11,17 +12,14 @@ import java.util.UUID
 
 @Entity
 internal data class LogEntity(
-    // UUID for primary key is probably overly complicated for this use case,
-    // but I wanted to do it for the learning experience.
     @PrimaryKey
     val id: UUID,
     val level: LogLevel,
     val message: String,
+    val packageName: String,
     val tag: String,
     val timestampCreated: Instant,
-    var timestampUpdated: Instant,
-    val throwable: Throwable?,
-    var uploaded: Boolean
+    val throwable: Throwable?
 ) {
     companion object {
         /**
@@ -31,21 +29,19 @@ internal data class LogEntity(
             id: UUID = UUID.randomUUID(),
             level: LogLevel = LogLevel.DEBUG,
             message: String = "Hello World!",
+            packageName: String = BuildConfig.LIBRARY_PACKAGE_NAME,
             tag: String = "LogEntity",
             timestampCreated: Instant = Instant.now(),
-            timestampUpdated: Instant = Instant.now(),
-            throwable: Throwable? = null,
-            uploaded: Boolean = false
+            throwable: Throwable? = null
         ): LogEntity =
             LogEntity(
                 id = id,
                 level = level,
                 message = message,
+                packageName = packageName,
                 tag = tag,
                 timestampCreated = timestampCreated,
-                timestampUpdated = timestampUpdated,
-                throwable = throwable,
-                uploaded = uploaded
+                throwable = throwable
             )
     }
 

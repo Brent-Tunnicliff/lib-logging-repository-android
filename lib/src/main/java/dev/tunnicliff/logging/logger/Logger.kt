@@ -8,4 +8,14 @@ interface Logger {
     fun warning(tag: String, message: String, throwable: Throwable? = null)
     fun error(tag: String, message: String, throwable: Throwable? = null)
     fun critical(tag: String, message: String, throwable: Throwable? = null)
+
+    /**
+     * Used for extending to add singleton logger instances for modules and apps.
+     */
+    companion object {
+        /**
+         * Logger instance for the logging module.
+         */
+        internal lateinit var LOGGING: Logger
+    }
 }

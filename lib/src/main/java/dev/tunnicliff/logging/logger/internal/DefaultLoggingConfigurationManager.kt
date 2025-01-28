@@ -14,7 +14,6 @@ import dev.tunnicliff.logging.logger.Logger
 import dev.tunnicliff.logging.logger.LoggingConfigurationManager
 import dev.tunnicliff.logging.model.LocalPersistenceRetention
 import dev.tunnicliff.logging.model.LogLevel
-import dev.tunnicliff.logging.model.LogUploadPermission
 import dev.tunnicliff.logging.view.internal.toLogDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -24,8 +23,6 @@ import java.time.Instant
 
 internal class DefaultLoggingConfigurationManager(
     private val context: Context,
-    // Making `logger` a lambda to avoid cycle dependency.
-    private val logger: () -> Logger,
     private val database: LoggingDatabase
 ) : LoggingConfigurationManager {
     private companion object {
@@ -39,26 +36,19 @@ internal class DefaultLoggingConfigurationManager(
             LogLevel.valueOf(it)
         }
 
-    override suspend fun getUploadPermission(): Flow<LogUploadPermission> =
-        getPreference(Preference.UploadPermission) {
-            LogUploadPermission.valueOf(it)
-        }
-
     override suspend fun setMinimumLogLevel(value: LogLevel) {
-        logger().info(tag = TAG, message = "Updating minimum log level to ${value.name}")
+        Logger.LOGGING.info(tag = TAG, message = "Updating minimum log level to ${value.name}")
         setPreference(Preference.MinimumLogLevel, value.name)
-    }
-
-    override suspend fun setUploadPermission(value: LogUploadPermission) {
-        logger().info(tag = TAG, message = "Updating upload permission to ${value.name}")
-        setPreference(Preference.UploadPermission, value.name)
     }
 
     override suspend fun deleteOldLogs(retention: LocalPersistenceRetention): Int {
         val timestamp = retention.getTimestampFrom(Instant.now())
-        logger().info(tag = TAG, message = "Deleting logs older than ${timestamp.toLogDate()}")
+        Logger.LOGGING.info(
+            tag = TAG,
+            message = "Deleting logs older than ${timestamp.toLogDate()}"
+        )
         val result = database.logDao().deleteLogsOlderThan(timestamp)
-        logger().info(tag = TAG, message = "Deleted $result logs")
+        Logger.LOGGING.info(tag = TAG, message = "Deleted $result logs")
         logDatabaseSize()
         return result
     }
@@ -75,11 +65,11 @@ internal class DefaultLoggingConfigurationManager(
             .catch {
                 // dataStore.data throws an IOException when an error is encountered when reading data
                 if (it is IOException) {
-                    logger().critical(TAG, "Reading preference threw IOException", it)
+                    Logger.LOGGING.critical(TAG, "Reading preference threw IOException", it)
                     // Ignore IOException.
                     emit(emptyPreferences())
                 } else {
-                    logger().critical(TAG, "Reading preference threw throwable", it)
+                    Logger.LOGGING.critical(TAG, "Reading preference threw throwable", it)
                     throw it
                 }
             }
@@ -91,11 +81,14 @@ internal class DefaultLoggingConfigurationManager(
 
     private suspend fun logDatabaseSize() {
         val databaseSizeInfos = database.logDao().getDatabaseSizeInfo()
-        logger().debug(tag = TAG, message = "Logs database info: $databaseSizeInfos")
+        Logger.LOGGING.debug(tag = TAG, message = "Logs database info: $databaseSizeInfos")
         val databaseSize = databaseSizeInfos.fold(0) { acc, sizeInfo ->
             acc + sizeInfo.calculateSize()
         }
-        logger().info(tag = TAG, message = "Logs database size: ${databaseSize.sizeFromBytes()}")
+        Logger.LOGGING.info(
+            tag = TAG,
+            message = "Logs database size: ${databaseSize.sizeFromBytes()}"
+        )
     }
 
     private suspend fun <StoredValue, Value> setPreference(
@@ -107,10 +100,10 @@ internal class DefaultLoggingConfigurationManager(
                 it[preference.key] = value
             }
         } catch (exception: IOException) {
-            logger().critical(TAG, "Writing preference threw IOException", exception)
+            Logger.LOGGING.critical(TAG, "Writing preference threw IOException", exception)
             // Ignore IOException.
         } catch (throwable: Throwable) {
-            logger().critical(TAG, "Writing preference threw throwable", throwable)
+            Logger.LOGGING.critical(TAG, "Writing preference threw throwable", throwable)
             throw throwable
         }
     }
@@ -127,10 +120,5 @@ private sealed class Preference<StoredValue, DefaultValue>(
     data object MinimumLogLevel : Preference<String, LogLevel>(
         stringPreferencesKey("MINIMUM_LOG_LEVEL"),
         LogLevel.INFO
-    )
-
-    data object UploadPermission : Preference<String, LogUploadPermission>(
-        stringPreferencesKey("UPLOAD_PERMISSION"),
-        LogUploadPermission.NOT_SET
     )
 }

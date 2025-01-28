@@ -49,8 +49,7 @@ internal object PreviewLogsViewModel : LogsViewModel() {
     private val logs = LogLevel.entries.map {
         LogEntity.mock(
             level = it,
-            throwable = if (it == LogLevel.ERROR) LogEntity.Throwable.mock() else null,
-            uploaded = it == LogLevel.DEBUG
+            throwable = if (it == LogLevel.ERROR) LogEntity.Throwable.mock() else null
         )
     }
 }
