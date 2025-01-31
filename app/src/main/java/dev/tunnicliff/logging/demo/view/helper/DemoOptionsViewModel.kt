@@ -4,7 +4,7 @@ package dev.tunnicliff.logging.demo.view.helper
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.tunnicliff.logging.LOG
+import dev.tunnicliff.logging.demo.LOG
 import dev.tunnicliff.logging.model.LogLevel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

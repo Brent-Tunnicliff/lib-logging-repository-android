@@ -9,8 +9,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dev.tunnicliff.logging.internal.LOG
 import dev.tunnicliff.logging.internal.database.LoggingDatabase
-import dev.tunnicliff.logging.logger.Logger
 import dev.tunnicliff.logging.logger.LoggingConfigurationManager
 import dev.tunnicliff.logging.model.LocalPersistenceRetention
 import dev.tunnicliff.logging.model.LogLevel
@@ -37,18 +37,18 @@ internal class DefaultLoggingConfigurationManager(
         }
 
     override suspend fun setMinimumLogLevel(value: LogLevel) {
-        Logger.LOGGING.info(tag = TAG, message = "Updating minimum log level to ${value.name}")
+        LOG.info(tag = TAG, message = "Updating minimum log level to ${value.name}")
         setPreference(Preference.MinimumLogLevel, value.name)
     }
 
     override suspend fun deleteOldLogs(retention: LocalPersistenceRetention): Int {
         val timestamp = retention.getTimestampFrom(Instant.now())
-        Logger.LOGGING.info(
+        LOG.info(
             tag = TAG,
             message = "Deleting logs older than ${timestamp.toLogDate()}"
         )
         val result = database.logDao().deleteLogsOlderThan(timestamp)
-        Logger.LOGGING.info(tag = TAG, message = "Deleted $result logs")
+        LOG.info(tag = TAG, message = "Deleted $result logs")
         logDatabaseSize()
         return result
     }
@@ -65,11 +65,11 @@ internal class DefaultLoggingConfigurationManager(
             .catch {
                 // dataStore.data throws an IOException when an error is encountered when reading data
                 if (it is IOException) {
-                    Logger.LOGGING.critical(TAG, "Reading preference threw IOException", it)
+                    LOG.critical(TAG, "Reading preference threw IOException", it)
                     // Ignore IOException.
                     emit(emptyPreferences())
                 } else {
-                    Logger.LOGGING.critical(TAG, "Reading preference threw throwable", it)
+                    LOG.critical(TAG, "Reading preference threw throwable", it)
                     throw it
                 }
             }
@@ -81,11 +81,11 @@ internal class DefaultLoggingConfigurationManager(
 
     private suspend fun logDatabaseSize() {
         val databaseSizeInfos = database.logDao().getDatabaseSizeInfo()
-        Logger.LOGGING.debug(tag = TAG, message = "Logs database info: $databaseSizeInfos")
+        LOG.debug(tag = TAG, message = "Logs database info: $databaseSizeInfos")
         val databaseSize = databaseSizeInfos.fold(0) { acc, sizeInfo ->
             acc + sizeInfo.calculateSize()
         }
-        Logger.LOGGING.info(
+        LOG.info(
             tag = TAG,
             message = "Logs database size: ${databaseSize.sizeFromBytes()}"
         )
@@ -100,10 +100,10 @@ internal class DefaultLoggingConfigurationManager(
                 it[preference.key] = value
             }
         } catch (exception: IOException) {
-            Logger.LOGGING.critical(TAG, "Writing preference threw IOException", exception)
+            LOG.critical(TAG, "Writing preference threw IOException", exception)
             // Ignore IOException.
         } catch (throwable: Throwable) {
-            Logger.LOGGING.critical(TAG, "Writing preference threw throwable", throwable)
+            LOG.critical(TAG, "Writing preference threw throwable", throwable)
             throw throwable
         }
     }

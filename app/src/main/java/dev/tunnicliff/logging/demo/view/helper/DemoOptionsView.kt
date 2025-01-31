@@ -27,7 +27,7 @@ import dev.tunnicliff.ui.theme.PreviewerTheme
 import dev.tunnicliff.ui.theme.ThemedPreviewer
 
 @Composable
-fun DemoOptionsView(viewModel: DemoOptionsViewModel = viewModel(factory = AppContainer.ViewModelFactory)) {
+fun DemoOptionsView(viewModel: DemoOptionsViewModel = viewModel(factory = AppContainer.VIEW_MODEL_FACTORY)) {
     BaseCard {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

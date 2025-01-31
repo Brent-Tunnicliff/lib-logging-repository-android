@@ -35,15 +35,12 @@ import dev.tunnicliff.ui.theme.ThemedPreviewer
 
 private const val ROUTE = "LogsView"
 
-fun NavGraphBuilder.logsView(
-    container: LoggingContainer,
-    context: Context
-) {
+fun NavGraphBuilder.logsView(context: Context) {
     composable(
         route = ROUTE,
         label = context.getString(R.string.log_title)
     ) {
-        LogsView(container)
+        LogsView()
     }
 }
 
@@ -57,11 +54,7 @@ fun NavController.navigateToLogsView() {
  * Full screen view for logs.
  */
 @Composable
-fun LogsView(container: LoggingContainer) =
-    LogsView(viewModel(factory = container.viewModelFactory()))
-
-@Composable
-private fun LogsView(viewModel: LogsViewModel) {
+private fun LogsView(viewModel: LogsViewModel = viewModel(factory = LoggingContainer.VIEW_MODEL_FACTORY)) {
     val pagingItems: LazyPagingItems<LogEntity> = viewModel.logsState.collectAsLazyPagingItems()
 
     LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
@@ -102,6 +95,5 @@ private fun PreviewContent(theme: PreviewerTheme) {
                 LogsView(viewModel = PreviewLogsViewModel)
             }
         }
-//        LogsView(viewModel = PreviewLogsViewModel)
     }
 }

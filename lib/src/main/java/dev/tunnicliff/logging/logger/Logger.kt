@@ -14,8 +14,16 @@ interface Logger {
      */
     companion object {
         /**
-         * Logger instance for the logging module.
+         * Logger that does not perform any operation.
+         *
+         * Used as a default instance until a real one is set.
          */
-        internal lateinit var LOGGING: Logger
+        val NoOpLogger = object : Logger {
+            override fun debug(tag: String, message: String, throwable: Throwable?) {}
+            override fun info(tag: String, message: String, throwable: Throwable?) {}
+            override fun warning(tag: String, message: String, throwable: Throwable?) {}
+            override fun error(tag: String, message: String, throwable: Throwable?) {}
+            override fun critical(tag: String, message: String, throwable: Throwable?) {}
+        }
     }
 }

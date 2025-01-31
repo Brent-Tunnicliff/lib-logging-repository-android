@@ -3,6 +3,7 @@
 package dev.tunnicliff.logging.logger.internal
 
 import android.content.Context
+import dev.tunnicliff.logging.internal.LOG
 import dev.tunnicliff.logging.internal.database.LogDao
 import dev.tunnicliff.logging.internal.database.LoggingDatabase
 import dev.tunnicliff.logging.internal.database.SystemDatabaseSizeInfo
@@ -13,7 +14,7 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -34,10 +35,6 @@ class DefaultLoggingConfigurationManagerTests {
     @Before
     fun setup() {
         every { database.logDao() } returns logDao
-        mockkObject(Logger)
-        every { Logger.LOGGING } returns logger
-        every { logger.debug(any(), any(), any()) } returns Unit
-        every { logger.info(any(), any(), any()) } returns Unit
         every { retention.getTimestampFrom(any()) } returns timestamp
 
         loggingConfigurationManager = DefaultLoggingConfigurationManager(
@@ -65,6 +62,11 @@ class DefaultLoggingConfigurationManagerTests {
     // That is why I have the unit test to make sure it is working as expected.
     @Test
     fun deleteOldLogsSendsLogWithDatabaseSize() = runTest {
+        // We can mock a global variable by referencing its package and the generated java code.
+        mockkStatic("dev.tunnicliff.logging.internal.LogKt")
+        every { LOG } returns logger
+        every { logger.debug(any(), any(), any()) } returns Unit
+        every { logger.info(any(), any(), any()) } returns Unit
         coEvery { logDao.deleteLogsOlderThan(any()) } returns 0
         val sizeInfo = listOf(
             SystemDatabaseSizeInfo(), // 0
