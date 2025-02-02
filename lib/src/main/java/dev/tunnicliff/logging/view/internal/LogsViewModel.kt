@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 
 internal abstract class LogsViewModel : ViewModel() {
     abstract val logsState: StateFlow<PagingData<LogEntity>>
+    abstract fun exportLogs()
     abstract fun viewCreated()
 }
 
@@ -27,6 +28,10 @@ internal class DefaultLogsViewModel(
 
     private var _logsState: MutableStateFlow<PagingData<LogEntity>> =
         MutableStateFlow(value = PagingData.empty())
+
+    override fun exportLogs() {
+        TODO("Not yet implemented")
+    }
 
     override fun viewCreated() {
         viewModelScope.launch {
@@ -44,6 +49,7 @@ internal object PreviewLogsViewModel : LogsViewModel() {
     override val logsState: StateFlow<PagingData<LogEntity>>
         get() = MutableStateFlow(PagingData.from(logs))
 
+    override fun exportLogs() {}
     override fun viewCreated() {}
 
     private val logs = LogLevel.entries.map {
@@ -51,5 +57,14 @@ internal object PreviewLogsViewModel : LogsViewModel() {
             level = it,
             throwable = if (it == LogLevel.ERROR) LogEntity.Throwable.mock() else null
         )
-    }
+    } + listOf(
+        LogEntity.mock(
+            message = "This log happens to have a very, very, very long message. This purpose of this is to demonstrate wrapping and expanding. This log happens to have a very, very, very long message. This purpose of this is to demonstrate wrapping and expanding."
+        ),
+        LogEntity.mock(),
+        LogEntity.mock(),
+        LogEntity.mock(),
+        LogEntity.mock(),
+        LogEntity.mock()
+    )
 }

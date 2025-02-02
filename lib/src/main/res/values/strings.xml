@@ -5,7 +5,9 @@
     <string name="log_card_error">Error: %1$s</string>
     <string name="log_card_icon_content_description_expand">Tap card to expand</string>
     <string name="log_card_icon_content_description_collapse">Tap card to collapse</string>
-    <string name="log_disclaimer">Logs only exist on this device, they are not uploaded anywhere.</string>
+    <string name="log_disclaimer">Logs only exist on this device, they are not uploaded anywhere.\nThey are automatically deleted if older than 3 months.</string>
+    <string name="log_export">Export all logs</string>
+    <string name="log_floating_action_button_content_description">See more information</string>
     <string name="log_level_critical">Critical</string>
     <string name="log_level_debug">Debug</string>
     <string name="log_level_error">Error</string>

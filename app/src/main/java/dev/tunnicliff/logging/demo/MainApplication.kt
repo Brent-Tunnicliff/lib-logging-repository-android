@@ -3,6 +3,7 @@
 package dev.tunnicliff.logging.demo
 
 import android.app.Application
+import dev.tunnicliff.logging.model.LocalPersistenceRetention
 import dev.tunnicliff.logging.model.LogLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,8 @@ class MainApplication : Application() {
         applicationScope.launch {
             with(container.loggingConfigurationManager()) {
                 setMinimumLogLevel(LogLevel.DEBUG)
-                deleteOldLogs()
+                @Suppress("DEPRECATION")
+                deleteOldLogs(LocalPersistenceRetention.FiveMinutes)
             }
         }
     }

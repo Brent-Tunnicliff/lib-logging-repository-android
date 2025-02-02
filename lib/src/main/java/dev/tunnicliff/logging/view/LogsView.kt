@@ -4,11 +4,32 @@ package dev.tunnicliff.logging.view
 
 import android.content.Context
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,28 +74,76 @@ fun NavController.navigateToLogsView() {
 /**
  * Full screen view for logs.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LogsView(viewModel: LogsViewModel = viewModel(factory = LoggingContainer.VIEW_MODEL_FACTORY)) {
     val pagingItems: LazyPagingItems<LogEntity> = viewModel.logsState.collectAsLazyPagingItems()
+    var fabHeight by remember { mutableIntStateOf(0) }
+    val fabHeightInDp = with(LocalDensity.current) { fabHeight.toDp() }
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
 
     LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
         viewModel.viewCreated()
     }
 
-    BaseList {
-        item {
-            Text(
-                text = stringResource(R.string.log_disclaimer),
-                textAlign = TextAlign.Center,
+    Scaffold(
+        floatingActionButton = {
+            SmallFloatingActionButton(
+                modifier = Modifier.onGloballyPositioned {
+                    fabHeight = it.size.height
+                },
+                onClick = {
+                    showBottomSheet = true
+                },
+                shape = CircleShape
+            ) {
+                Icon(
+                    Icons.Outlined.Info,
+                    stringResource(R.string.log_floating_action_button_content_description)
+                )
+            }
+        }
+    ) { paddingValues ->
+        BaseList(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            contentPadding = PaddingValues(bottom = fabHeightInDp + 16.dp)
+        ) {
+            items(count = pagingItems.itemCount) { index ->
+                LogCardView(logEntity = pagingItems[index]!!)
+            }
+        }
+    }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            modifier = Modifier.fillMaxHeight(),
+            onDismissRequest = {
+                showBottomSheet = false
+            },
+            sheetState = sheetState
+        ) {
+            Column(
                 modifier = Modifier.padding(
                     horizontal = 24.dp,
                     vertical = 16.dp
+                ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    text = stringResource(R.string.log_disclaimer),
+                    textAlign = TextAlign.Center
                 )
-            )
-        }
 
-        items(count = pagingItems.itemCount) { index ->
-            LogCardView(logEntity = pagingItems[index]!!)
+                Button(onClick = {
+                    viewModel.exportLogs()
+                }) {
+                    Text(text = stringResource(R.string.log_export))
+                }
+            }
         }
     }
 }
